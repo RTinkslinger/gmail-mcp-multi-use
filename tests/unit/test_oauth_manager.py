@@ -87,7 +87,9 @@ class TestGetAuthUrl:
         oauth_manager._state_manager.get_pkce_challenge.return_value = "test_challenge"
 
         oauth_manager._google_client = MagicMock()
-        oauth_manager._google_client.build_auth_url.return_value = "https://accounts.google.com/oauth?state=test"
+        oauth_manager._google_client.build_auth_url.return_value = (
+            "https://accounts.google.com/oauth?state=test"
+        )
 
         result = await oauth_manager.get_auth_url(user_id="user_external_123")
 
@@ -125,7 +127,9 @@ class TestHandleCallback:
     """Tests for handle_callback."""
 
     @pytest.mark.asyncio
-    async def test_handle_callback_new_connection(self, oauth_manager, mock_storage, mock_encryption):
+    async def test_handle_callback_new_connection(
+        self, oauth_manager, mock_storage, mock_encryption
+    ):
         """Test callback creates new connection."""
         oauth_manager._state_manager = AsyncMock()
         oauth_manager._state_manager.validate_and_consume.return_value = OAuthState(
@@ -171,7 +175,9 @@ class TestHandleCallback:
             updated_at=datetime.utcnow(),
         )
 
-        result = await oauth_manager.handle_callback(code="auth_code", state="test_state")
+        result = await oauth_manager.handle_callback(
+            code="auth_code", state="test_state"
+        )
 
         assert result.success is True
         assert result.connection_id == "conn_123"
@@ -179,7 +185,9 @@ class TestHandleCallback:
         mock_storage.create_connection.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_handle_callback_existing_connection(self, oauth_manager, mock_storage, mock_encryption):
+    async def test_handle_callback_existing_connection(
+        self, oauth_manager, mock_storage, mock_encryption
+    ):
         """Test callback updates existing connection."""
         oauth_manager._state_manager = AsyncMock()
         oauth_manager._state_manager.validate_and_consume.return_value = OAuthState(
@@ -226,7 +234,9 @@ class TestHandleCallback:
             updated_at=datetime.utcnow(),
         )
 
-        result = await oauth_manager.handle_callback(code="auth_code", state="test_state")
+        result = await oauth_manager.handle_callback(
+            code="auth_code", state="test_state"
+        )
 
         assert result.success is True
         assert result.connection_id == "existing_conn"
@@ -242,7 +252,9 @@ class TestHandleCallback:
             code="invalid_state",
         )
 
-        result = await oauth_manager.handle_callback(code="auth_code", state="invalid_state")
+        result = await oauth_manager.handle_callback(
+            code="auth_code", state="invalid_state"
+        )
 
         assert result.success is False
         assert "Invalid state" in result.error
@@ -263,9 +275,13 @@ class TestHandleCallback:
         )
 
         oauth_manager._google_client = AsyncMock()
-        oauth_manager._google_client.exchange_code.side_effect = Exception("Exchange failed")
+        oauth_manager._google_client.exchange_code.side_effect = Exception(
+            "Exchange failed"
+        )
 
-        result = await oauth_manager.handle_callback(code="bad_code", state="test_state")
+        result = await oauth_manager.handle_callback(
+            code="bad_code", state="test_state"
+        )
 
         assert result.success is False
         assert "Exchange failed" in result.error
@@ -275,7 +291,9 @@ class TestDisconnect:
     """Tests for disconnect."""
 
     @pytest.mark.asyncio
-    async def test_disconnect_with_revoke(self, oauth_manager, mock_storage, mock_encryption):
+    async def test_disconnect_with_revoke(
+        self, oauth_manager, mock_storage, mock_encryption
+    ):
         """Test disconnecting with Google revocation."""
         connection = Connection(
             id="conn_123",
@@ -336,7 +354,9 @@ class TestDisconnect:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_disconnect_revoke_fails_continues(self, oauth_manager, mock_storage, mock_encryption):
+    async def test_disconnect_revoke_fails_continues(
+        self, oauth_manager, mock_storage, mock_encryption
+    ):
         """Test disconnecting continues if revoke fails."""
         connection = Connection(
             id="conn_123",
@@ -354,7 +374,9 @@ class TestDisconnect:
         mock_storage.get_connection.return_value = connection
 
         oauth_manager._google_client = AsyncMock()
-        oauth_manager._google_client.revoke_token.side_effect = Exception("Revoke failed")
+        oauth_manager._google_client.revoke_token.side_effect = Exception(
+            "Revoke failed"
+        )
 
         result = await oauth_manager.disconnect("conn_123", revoke_google_access=True)
 

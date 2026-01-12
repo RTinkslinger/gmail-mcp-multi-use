@@ -28,7 +28,9 @@ from datetime import datetime, timezone
 from typing import Any
 
 # Context variables for request tracing
-_log_context: ContextVar[dict[str, Any] | None] = ContextVar("log_context", default=None)
+_log_context: ContextVar[dict[str, Any] | None] = ContextVar(
+    "log_context", default=None
+)
 
 
 class LogContext:
@@ -113,11 +115,28 @@ class StructuredFormatter(logging.Formatter):
         # or via our custom adapter
         for key, value in record.__dict__.items():
             if key not in (
-                "name", "msg", "args", "created", "filename", "funcName",
-                "levelname", "levelno", "lineno", "module", "msecs",
-                "pathname", "process", "processName", "relativeCreated",
-                "stack_info", "exc_info", "exc_text", "thread", "threadName",
-                "message", "taskName",
+                "name",
+                "msg",
+                "args",
+                "created",
+                "filename",
+                "funcName",
+                "levelname",
+                "levelno",
+                "lineno",
+                "module",
+                "msecs",
+                "pathname",
+                "process",
+                "processName",
+                "relativeCreated",
+                "stack_info",
+                "exc_info",
+                "exc_text",
+                "thread",
+                "threadName",
+                "message",
+                "taskName",
             ):
                 # Include custom fields
                 if not key.startswith("_"):
@@ -138,10 +157,10 @@ class HumanFormatter(logging.Formatter):
     """
 
     COLORS = {
-        "DEBUG": "\033[36m",     # Cyan
-        "INFO": "\033[32m",      # Green
-        "WARNING": "\033[33m",   # Yellow
-        "ERROR": "\033[31m",     # Red
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
         "CRITICAL": "\033[35m",  # Magenta
     }
     RESET = "\033[0m"
@@ -171,11 +190,28 @@ class HumanFormatter(logging.Formatter):
         # Add extra fields from record
         for key, value in record.__dict__.items():
             if key not in (
-                "name", "msg", "args", "created", "filename", "funcName",
-                "levelname", "levelno", "lineno", "module", "msecs",
-                "pathname", "process", "processName", "relativeCreated",
-                "stack_info", "exc_info", "exc_text", "thread", "threadName",
-                "message", "taskName",
+                "name",
+                "msg",
+                "args",
+                "created",
+                "filename",
+                "funcName",
+                "levelname",
+                "levelno",
+                "lineno",
+                "module",
+                "msecs",
+                "pathname",
+                "process",
+                "processName",
+                "relativeCreated",
+                "stack_info",
+                "exc_info",
+                "exc_text",
+                "thread",
+                "threadName",
+                "message",
+                "taskName",
             ):
                 if not key.startswith("_"):
                     extra_fields[key] = value
@@ -200,13 +236,13 @@ class StructuredLoggerAdapter(logging.LoggerAdapter):
         logger.info("Searching messages", query="is:unread", max_results=10)
     """
 
-    def __init__(self, logger: logging.Logger, extra: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, logger: logging.Logger, extra: dict[str, Any] | None = None
+    ) -> None:
         """Initialize the adapter."""
         super().__init__(logger, extra or {})
 
-    def process(
-        self, msg: str, kwargs: dict[str, Any]
-    ) -> tuple[str, dict[str, Any]]:
+    def process(self, msg: str, kwargs: dict[str, Any]) -> tuple[str, dict[str, Any]]:
         """Process the logging call to add extra fields."""
         # Move non-standard kwargs to extra
         extra = kwargs.get("extra", {})

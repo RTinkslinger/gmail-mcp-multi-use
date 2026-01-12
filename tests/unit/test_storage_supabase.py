@@ -29,7 +29,9 @@ def backend(mock_supabase_client: MagicMock) -> SupabaseBackend:
     return backend
 
 
-def create_mock_response(data: list[dict[str, Any]] | None = None, count: int | None = None) -> MagicMock:
+def create_mock_response(
+    data: list[dict[str, Any]] | None = None, count: int | None = None
+) -> MagicMock:
     """Create a mock Supabase response."""
     response = MagicMock()
     response.data = data or []
@@ -47,8 +49,8 @@ class TestSupabaseBackendLifecycle:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test successful initialization."""
-        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.return_value = (
-            create_mock_response([{"id": "1"}])
+        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.return_value = create_mock_response(
+            [{"id": "1"}]
         )
 
         await backend.initialize()
@@ -62,8 +64,8 @@ class TestSupabaseBackendLifecycle:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test initialization failure."""
-        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.side_effect = (
-            Exception("Connection failed")
+        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.side_effect = Exception(
+            "Connection failed"
         )
 
         with pytest.raises(StorageError) as exc_info:
@@ -78,8 +80,8 @@ class TestSupabaseBackendLifecycle:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test health check returns True when healthy."""
-        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.return_value = (
-            create_mock_response([{"id": "1"}])
+        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.return_value = create_mock_response(
+            [{"id": "1"}]
         )
 
         result = await backend.health_check()
@@ -93,8 +95,8 @@ class TestSupabaseBackendLifecycle:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test health check returns False when unhealthy."""
-        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.side_effect = (
-            Exception("Connection failed")
+        mock_supabase_client.table.return_value.select.return_value.limit.return_value.execute.side_effect = Exception(
+            "Connection failed"
         )
 
         result = await backend.health_check()
@@ -121,19 +123,21 @@ class TestSupabaseBackendUsers:
         now = datetime.now(timezone.utc).isoformat()
 
         # First query returns empty (user doesn't exist)
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         # Insert returns new user
-        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "user123",
-                "external_user_id": "ext_123",
-                "email": "test@example.com",
-                "created_at": now,
-                "updated_at": now,
-            }])
+        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "user123",
+                    "external_user_id": "ext_123",
+                    "email": "test@example.com",
+                    "created_at": now,
+                    "updated_at": now,
+                }
+            ]
         )
 
         user = await backend.get_or_create_user("ext_123", "test@example.com")
@@ -151,14 +155,16 @@ class TestSupabaseBackendUsers:
         """Test returning existing user."""
         now = datetime.now(timezone.utc).isoformat()
 
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "user123",
-                "external_user_id": "ext_123",
-                "email": "test@example.com",
-                "created_at": now,
-                "updated_at": now,
-            }])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "user123",
+                    "external_user_id": "ext_123",
+                    "email": "test@example.com",
+                    "created_at": now,
+                    "updated_at": now,
+                }
+            ]
         )
 
         user = await backend.get_or_create_user("ext_123")
@@ -175,14 +181,16 @@ class TestSupabaseBackendUsers:
         """Test getting user by external ID."""
         now = datetime.now(timezone.utc).isoformat()
 
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "user123",
-                "external_user_id": "ext_123",
-                "email": "test@example.com",
-                "created_at": now,
-                "updated_at": now,
-            }])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "user123",
+                    "external_user_id": "ext_123",
+                    "email": "test@example.com",
+                    "created_at": now,
+                    "updated_at": now,
+                }
+            ]
         )
 
         user = await backend.get_user_by_external_id("ext_123")
@@ -197,8 +205,8 @@ class TestSupabaseBackendUsers:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test getting non-existent user returns None."""
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         user = await backend.get_user_by_external_id("nonexistent")
@@ -214,8 +222,8 @@ class TestSupabaseBackendUsers:
         """Test listing all users."""
         now = datetime.now(timezone.utc).isoformat()
 
-        mock_supabase_client.table.return_value.select.return_value.order.return_value.execute.return_value = (
-            create_mock_response([
+        mock_supabase_client.table.return_value.select.return_value.order.return_value.execute.return_value = create_mock_response(
+            [
                 {
                     "id": "user1",
                     "external_user_id": "ext_1",
@@ -230,7 +238,7 @@ class TestSupabaseBackendUsers:
                     "created_at": now,
                     "updated_at": now,
                 },
-            ])
+            ]
         )
 
         users = await backend.list_users()
@@ -254,20 +262,22 @@ class TestSupabaseBackendConnections:
         now_iso = now.isoformat()
         expires = now + timedelta(hours=1)
 
-        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "conn123",
-                "user_id": "user123",
-                "gmail_address": "test@gmail.com",
-                "access_token_encrypted": "enc_access",
-                "refresh_token_encrypted": "enc_refresh",
-                "token_expires_at": expires.isoformat(),
-                "scopes": '["gmail.readonly"]',
-                "is_active": True,
-                "created_at": now_iso,
-                "updated_at": now_iso,
-                "last_used_at": None,
-            }])
+        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "conn123",
+                    "user_id": "user123",
+                    "gmail_address": "test@gmail.com",
+                    "access_token_encrypted": "enc_access",
+                    "refresh_token_encrypted": "enc_refresh",
+                    "token_expires_at": expires.isoformat(),
+                    "scopes": '["gmail.readonly"]',
+                    "is_active": True,
+                    "created_at": now_iso,
+                    "updated_at": now_iso,
+                    "last_used_at": None,
+                }
+            ]
         )
 
         connection = await backend.create_connection(
@@ -290,8 +300,8 @@ class TestSupabaseBackendConnections:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test duplicate connection raises StorageError."""
-        mock_supabase_client.table.return_value.insert.return_value.execute.side_effect = (
-            Exception("unique constraint violated")
+        mock_supabase_client.table.return_value.insert.return_value.execute.side_effect = Exception(
+            "unique constraint violated"
         )
 
         with pytest.raises(StorageError) as exc_info:
@@ -315,20 +325,22 @@ class TestSupabaseBackendConnections:
         """Test getting a connection."""
         now = datetime.now(timezone.utc).isoformat()
 
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "conn123",
-                "user_id": "user123",
-                "gmail_address": "test@gmail.com",
-                "access_token_encrypted": "enc_access",
-                "refresh_token_encrypted": "enc_refresh",
-                "token_expires_at": now,
-                "scopes": '["gmail.readonly"]',
-                "is_active": True,
-                "created_at": now,
-                "updated_at": now,
-                "last_used_at": None,
-            }])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "conn123",
+                    "user_id": "user123",
+                    "gmail_address": "test@gmail.com",
+                    "access_token_encrypted": "enc_access",
+                    "refresh_token_encrypted": "enc_refresh",
+                    "token_expires_at": now,
+                    "scopes": '["gmail.readonly"]',
+                    "is_active": True,
+                    "created_at": now,
+                    "updated_at": now,
+                    "last_used_at": None,
+                }
+            ]
         )
 
         connection = await backend.get_connection("conn123")
@@ -343,8 +355,8 @@ class TestSupabaseBackendConnections:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test getting non-existent connection returns None."""
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         connection = await backend.get_connection("nonexistent")
@@ -362,21 +374,23 @@ class TestSupabaseBackendConnections:
 
         mock_query = MagicMock()
         mock_query.eq.return_value = mock_query
-        mock_query.order.return_value.execute.return_value = create_mock_response([
-            {
-                "id": "conn1",
-                "user_id": "user123",
-                "gmail_address": "test1@gmail.com",
-                "access_token_encrypted": "enc_access",
-                "refresh_token_encrypted": "enc_refresh",
-                "token_expires_at": now,
-                "scopes": '["gmail.readonly"]',
-                "is_active": True,
-                "created_at": now,
-                "updated_at": now,
-                "last_used_at": None,
-            },
-        ])
+        mock_query.order.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "conn1",
+                    "user_id": "user123",
+                    "gmail_address": "test1@gmail.com",
+                    "access_token_encrypted": "enc_access",
+                    "refresh_token_encrypted": "enc_refresh",
+                    "token_expires_at": now,
+                    "scopes": '["gmail.readonly"]',
+                    "is_active": True,
+                    "created_at": now,
+                    "updated_at": now,
+                    "last_used_at": None,
+                },
+            ]
+        )
         mock_supabase_client.table.return_value.select.return_value = mock_query
 
         connections = await backend.list_connections()
@@ -395,20 +409,22 @@ class TestSupabaseBackendConnections:
         now_iso = now.isoformat()
         new_expires = now + timedelta(hours=1)
 
-        mock_supabase_client.table.return_value.update.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "conn123",
-                "user_id": "user123",
-                "gmail_address": "test@gmail.com",
-                "access_token_encrypted": "new_enc_access",
-                "refresh_token_encrypted": "new_enc_refresh",
-                "token_expires_at": new_expires.isoformat(),
-                "scopes": '["gmail.readonly"]',
-                "is_active": True,
-                "created_at": now_iso,
-                "updated_at": now_iso,
-                "last_used_at": None,
-            }])
+        mock_supabase_client.table.return_value.update.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "conn123",
+                    "user_id": "user123",
+                    "gmail_address": "test@gmail.com",
+                    "access_token_encrypted": "new_enc_access",
+                    "refresh_token_encrypted": "new_enc_refresh",
+                    "token_expires_at": new_expires.isoformat(),
+                    "scopes": '["gmail.readonly"]',
+                    "is_active": True,
+                    "created_at": now_iso,
+                    "updated_at": now_iso,
+                    "last_used_at": None,
+                }
+            ]
         )
 
         connection = await backend.update_connection_tokens(
@@ -427,8 +443,8 @@ class TestSupabaseBackendConnections:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test deactivating a connection."""
-        mock_supabase_client.table.return_value.update.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{"id": "conn123", "is_active": False}])
+        mock_supabase_client.table.return_value.update.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [{"id": "conn123", "is_active": False}]
         )
 
         await backend.deactivate_connection("conn123")
@@ -442,8 +458,8 @@ class TestSupabaseBackendConnections:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test deleting a connection."""
-        mock_supabase_client.table.return_value.delete.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.delete.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         await backend.delete_connection("conn123")
@@ -465,17 +481,19 @@ class TestSupabaseBackendOAuthStates:
         now_iso = now.isoformat()
         expires = now + timedelta(minutes=10)
 
-        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "state_id",
-                "state": "state123",
-                "user_id": "user123",
-                "scopes": '["gmail.readonly"]',
-                "redirect_uri": "http://localhost:8080/callback",
-                "code_verifier": "verifier123",
-                "expires_at": expires.isoformat(),
-                "created_at": now_iso,
-            }])
+        mock_supabase_client.table.return_value.insert.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "state_id",
+                    "state": "state123",
+                    "user_id": "user123",
+                    "scopes": '["gmail.readonly"]',
+                    "redirect_uri": "http://localhost:8080/callback",
+                    "code_verifier": "verifier123",
+                    "expires_at": expires.isoformat(),
+                    "created_at": now_iso,
+                }
+            ]
         )
 
         state = await backend.create_oauth_state(
@@ -499,17 +517,19 @@ class TestSupabaseBackendOAuthStates:
         """Test getting an OAuth state."""
         now = datetime.now(timezone.utc).isoformat()
 
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([{
-                "id": "state_id",
-                "state": "state123",
-                "user_id": "user123",
-                "scopes": '["gmail.readonly"]',
-                "redirect_uri": "http://localhost:8080/callback",
-                "code_verifier": "verifier123",
-                "expires_at": now,
-                "created_at": now,
-            }])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            [
+                {
+                    "id": "state_id",
+                    "state": "state123",
+                    "user_id": "user123",
+                    "scopes": '["gmail.readonly"]',
+                    "redirect_uri": "http://localhost:8080/callback",
+                    "code_verifier": "verifier123",
+                    "expires_at": now,
+                    "created_at": now,
+                }
+            ]
         )
 
         state = await backend.get_oauth_state("state123")
@@ -524,8 +544,8 @@ class TestSupabaseBackendOAuthStates:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test getting non-existent OAuth state."""
-        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.select.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         state = await backend.get_oauth_state("nonexistent")
@@ -539,8 +559,8 @@ class TestSupabaseBackendOAuthStates:
         mock_supabase_client: MagicMock,
     ) -> None:
         """Test deleting an OAuth state."""
-        mock_supabase_client.table.return_value.delete.return_value.eq.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.delete.return_value.eq.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         await backend.delete_oauth_state("state123")
@@ -555,13 +575,13 @@ class TestSupabaseBackendOAuthStates:
     ) -> None:
         """Test cleaning up expired states."""
         # Count query
-        mock_supabase_client.table.return_value.select.return_value.lt.return_value.execute.return_value = (
-            create_mock_response([], count=3)
+        mock_supabase_client.table.return_value.select.return_value.lt.return_value.execute.return_value = create_mock_response(
+            [], count=3
         )
 
         # Delete query
-        mock_supabase_client.table.return_value.delete.return_value.lt.return_value.execute.return_value = (
-            create_mock_response([])
+        mock_supabase_client.table.return_value.delete.return_value.lt.return_value.execute.return_value = create_mock_response(
+            []
         )
 
         count = await backend.cleanup_expired_states()

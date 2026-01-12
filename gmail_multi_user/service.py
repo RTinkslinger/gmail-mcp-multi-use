@@ -145,7 +145,9 @@ class GmailService:
 
             # Fetch message details
             message_ids = [m["id"] for m in message_refs]
-            format_type: Literal["full", "metadata"] = "full" if include_body else "metadata"
+            format_type: Literal["full", "metadata"] = (
+                "full" if include_body else "metadata"
+            )
 
             raw_messages = await self._api_client.batch_get_messages(
                 token=token,
@@ -163,7 +165,11 @@ class GmailService:
                 messages.append(msg)
 
             await self._update_last_used(connection_id)
-            logger.info("Search completed", result_count=len(messages), total_estimate=total_estimate)
+            logger.info(
+                "Search completed",
+                result_count=len(messages),
+                total_estimate=total_estimate,
+            )
 
             return SearchResult(
                 messages=messages,
@@ -380,7 +386,9 @@ class GmailService:
 
         return AttachmentData(
             filename=attachment_meta.filename if attachment_meta else "attachment",
-            mime_type=attachment_meta.mime_type if attachment_meta else "application/octet-stream",
+            mime_type=attachment_meta.mime_type
+            if attachment_meta
+            else "application/octet-stream",
             size=size,
             data=data,
         )

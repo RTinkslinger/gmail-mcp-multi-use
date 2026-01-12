@@ -44,15 +44,17 @@ async def list_connections_impl(
         user = await state.storage.get_user_by_id(conn.user_id)
         external_user_id = user.external_user_id if user else None
 
-        connection_list.append({
-            "id": conn.id,
-            "user_id": external_user_id,
-            "gmail_address": conn.gmail_address,
-            "scopes": conn.scopes,
-            "is_active": conn.is_active,
-            "created_at": format_datetime(conn.created_at),
-            "last_used_at": format_datetime(conn.last_used_at),
-        })
+        connection_list.append(
+            {
+                "id": conn.id,
+                "user_id": external_user_id,
+                "gmail_address": conn.gmail_address,
+                "scopes": conn.scopes,
+                "is_active": conn.is_active,
+                "created_at": format_datetime(conn.created_at),
+                "last_used_at": format_datetime(conn.last_used_at),
+            }
+        )
 
     return {"connections": connection_list}
 
@@ -224,7 +226,9 @@ async def gmail_list_connections(
     Returns:
         Dictionary with list of connections.
     """
-    return await list_connections_impl(user_id=user_id, include_inactive=include_inactive)
+    return await list_connections_impl(
+        user_id=user_id, include_inactive=include_inactive
+    )
 
 
 @mcp.tool

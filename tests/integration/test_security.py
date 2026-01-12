@@ -120,7 +120,7 @@ class TestSQLInjectionPrevention:
             "1 OR 1=1",
             "user' UNION SELECT * FROM connections --",
             "'; DELETE FROM users WHERE '1'='1",
-            "user\"; DROP TABLE users; --",
+            'user"; DROP TABLE users; --',
         ]
 
         for malicious_id in malicious_ids:

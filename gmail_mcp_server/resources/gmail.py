@@ -31,13 +31,15 @@ async def get_gmail_labels(connection_id: str) -> str:
 
         result = []
         for label in labels:
-            result.append({
-                "id": label.id,
-                "name": label.name,
-                "type": label.type,
-                "message_count": label.message_count,
-                "unread_count": label.unread_count,
-            })
+            result.append(
+                {
+                    "id": label.id,
+                    "name": label.name,
+                    "type": label.type,
+                    "message_count": label.message_count,
+                    "unread_count": label.unread_count,
+                }
+            )
 
         return json.dumps(result, indent=2)
 

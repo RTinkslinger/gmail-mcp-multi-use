@@ -104,7 +104,9 @@ class MockGmailAPIClient:
                 sender_name, sender_email = random.choice(SAMPLE_SENDERS)
                 subject = random.choice(SAMPLE_SUBJECTS)
                 body = random.choice(SAMPLE_BODIES) + sender_name
-                date = datetime.utcnow() - timedelta(days=random.randint(0, 30), hours=random.randint(0, 23))
+                date = datetime.utcnow() - timedelta(
+                    days=random.randint(0, 30), hours=random.randint(0, 23)
+                )
 
                 labels = ["INBOX"]
                 if random.random() < 0.3:
@@ -123,11 +125,23 @@ class MockGmailAPIClient:
                     "payload": {
                         "mimeType": "text/plain",
                         "headers": [
-                            {"name": "Subject", "value": subject if j == 0 else f"Re: {subject}"},
-                            {"name": "From", "value": f"{sender_name} <{sender_email}>"},
+                            {
+                                "name": "Subject",
+                                "value": subject if j == 0 else f"Re: {subject}",
+                            },
+                            {
+                                "name": "From",
+                                "value": f"{sender_name} <{sender_email}>",
+                            },
                             {"name": "To", "value": config.default_user_email},
-                            {"name": "Date", "value": date.strftime("%a, %d %b %Y %H:%M:%S +0000")},
-                            {"name": "Message-ID", "value": f"<{msg_id}@sandbox.example.com>"},
+                            {
+                                "name": "Date",
+                                "value": date.strftime("%a, %d %b %Y %H:%M:%S +0000"),
+                            },
+                            {
+                                "name": "Message-ID",
+                                "value": f"<{msg_id}@sandbox.example.com>",
+                            },
                         ],
                         "body": {
                             "size": len(body),
@@ -162,6 +176,7 @@ class MockGmailAPIClient:
             Search results with message IDs.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         # Simple query matching
@@ -187,7 +202,7 @@ class MockGmailAPIClient:
             except ValueError:
                 pass
 
-        results = matching[start:start + max_results]
+        results = matching[start : start + max_results]
         next_page = None
         if start + max_results < len(matching):
             next_page = str(start + max_results)
@@ -215,6 +230,7 @@ class MockGmailAPIClient:
             Message data.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         if message_id not in self._messages:
@@ -283,6 +299,7 @@ class MockGmailAPIClient:
             Thread data with messages.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         if thread_id not in self._threads:
@@ -307,6 +324,7 @@ class MockGmailAPIClient:
             Labels list.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         return {"labels": SAMPLE_LABELS}
@@ -328,6 +346,7 @@ class MockGmailAPIClient:
             Attachment data (mock).
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         # Return mock attachment data
@@ -347,6 +366,7 @@ class MockGmailAPIClient:
             Profile data.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         return {
@@ -373,6 +393,7 @@ class MockGmailAPIClient:
             Sent message info.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         msg_id = f"msg_{secrets.token_hex(8)}"
@@ -401,6 +422,7 @@ class MockGmailAPIClient:
             Draft info.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         draft_id = f"draft_{secrets.token_hex(8)}"
@@ -544,7 +566,9 @@ class MockGmailAPIClient:
         """
         for msg_id in message_ids:
             try:
-                await self.modify_message_labels(token, msg_id, add_labels, remove_labels)
+                await self.modify_message_labels(
+                    token, msg_id, add_labels, remove_labels
+                )
             except Exception:
                 continue
 

@@ -24,9 +24,11 @@ def diagnose_connection(connection_id: str | None = None) -> str:
     """
     connection_filter = ""
     if connection_id:
-        connection_filter = f'Diagnose connection: `{connection_id}`'
+        connection_filter = f"Diagnose connection: `{connection_id}`"
     else:
-        connection_filter = "No connection specified - will list and ask user to select."
+        connection_filter = (
+            "No connection specified - will list and ask user to select."
+        )
 
     return f"""# Diagnose Gmail Connection
 

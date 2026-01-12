@@ -124,7 +124,9 @@ def health() -> None:
                 f"[green]✓[/green] Database connected ({status['database_type']})"
             )
         else:
-            console.print(f"[red]✗[/red] Database not connected ({status['database_type']})")
+            console.print(
+                f"[red]✗[/red] Database not connected ({status['database_type']})"
+            )
 
         # OAuth status
         if status["google_oauth_configured"]:
@@ -232,11 +234,11 @@ def connections_revoke(
         )
 
         if result["success"]:
-            console.print(
-                f"[green]✓[/green] Disconnected {result['gmail_address']}"
-            )
+            console.print(f"[green]✓[/green] Disconnected {result['gmail_address']}")
         else:
-            console.print(f"[red]✗[/red] Failed to disconnect: {result.get('error', 'Unknown error')}")
+            console.print(
+                f"[red]✗[/red] Failed to disconnect: {result.get('error', 'Unknown error')}"
+            )
 
     asyncio.run(revoke_connection())
 

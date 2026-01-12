@@ -88,7 +88,10 @@ class OAuthManager:
             AuthUrlResult with the authorization URL and state.
         """
         with LogContext(user_id=user_id, operation="get_auth_url"):
-            logger.info("Generating OAuth authorization URL", scope_count=len(scopes) if scopes else 0)
+            logger.info(
+                "Generating OAuth authorization URL",
+                scope_count=len(scopes) if scopes else 0,
+            )
 
             # Ensure user exists
             user = await self._storage.get_or_create_user(external_user_id=user_id)
@@ -185,7 +188,9 @@ class OAuthManager:
                         refresh_token_encrypted=refresh_token_encrypted,
                         token_expires_at=token_response.expires_at,
                     )
-                    logger.info("Updated existing connection", connection_id=connection.id)
+                    logger.info(
+                        "Updated existing connection", connection_id=connection.id
+                    )
                     # Note: If connection was deactivated, updating tokens doesn't
                     # reactivate it. The user would need to explicitly reactivate
                     # or we could add a reactivate method. For now, tokens are updated.
@@ -239,7 +244,9 @@ class OAuthManager:
             True if disconnected successfully.
         """
         with LogContext(connection_id=connection_id, operation="disconnect"):
-            logger.info("Disconnecting Gmail account", revoke_google_access=revoke_google_access)
+            logger.info(
+                "Disconnecting Gmail account", revoke_google_access=revoke_google_access
+            )
 
             connection = await self._storage.get_connection(connection_id)
             if not connection:

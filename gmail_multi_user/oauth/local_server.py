@@ -132,7 +132,9 @@ class LocalOAuthServer:
                 print(f"If browser doesn't open, visit:\n{auth_result.auth_url}\n")
                 webbrowser.open(auth_result.auth_url)
             else:
-                print(f"\nPlease visit this URL to authenticate:\n{auth_result.auth_url}\n")
+                print(
+                    f"\nPlease visit this URL to authenticate:\n{auth_result.auth_url}\n"
+                )
 
             # Wait for callback with timeout
             try:
@@ -160,7 +162,9 @@ class LocalOAuthServer:
             else:
                 return LocalOAuthResult(
                     success=False,
-                    error=self._callback_result.error if self._callback_result else "Unknown error",
+                    error=self._callback_result.error
+                    if self._callback_result
+                    else "Unknown error",
                 )
 
         except ImportError:

@@ -22,6 +22,7 @@ class TestStorageFactory:
         backend = StorageFactory.create(config)
 
         from gmail_multi_user.storage.sqlite import SQLiteBackend
+
         assert isinstance(backend, SQLiteBackend)
 
     def test_create_supabase_backend(self):
@@ -32,7 +33,9 @@ class TestStorageFactory:
         config.storage.supabase.key = "test_key"
 
         # SupabaseBackend is imported lazily inside the create() method
-        with patch("gmail_multi_user.storage.supabase.SupabaseBackend") as mock_supabase:
+        with patch(
+            "gmail_multi_user.storage.supabase.SupabaseBackend"
+        ) as mock_supabase:
             mock_backend = MagicMock()
             mock_supabase.return_value = mock_backend
 
@@ -61,4 +64,5 @@ class TestStorageFactory:
         backend = StorageFactory.create(config)
 
         from gmail_multi_user.storage.sqlite import SQLiteBackend
+
         assert isinstance(backend, SQLiteBackend)

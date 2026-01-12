@@ -232,9 +232,7 @@ class TestDraftOperations:
         mock_http_client: MagicMock,
     ) -> None:
         """Test deleting a draft."""
-        mock_http_client.request = AsyncMock(
-            return_value=create_response(204)
-        )
+        mock_http_client.request = AsyncMock(return_value=create_response(204))
 
         result = await api_client.delete_draft(
             token="test_token",
@@ -340,9 +338,7 @@ class TestLabelModification:
         mock_http_client: MagicMock,
     ) -> None:
         """Test batch modifying labels."""
-        mock_http_client.request = AsyncMock(
-            return_value=create_response(204)
-        )
+        mock_http_client.request = AsyncMock(return_value=create_response(204))
 
         await api_client.batch_modify_labels(
             token="test_token",

@@ -235,6 +235,7 @@ class TestConfigureLogging:
         stream = io.StringIO()
         # Reset configured state for testing
         import gmail_multi_user.logging as log_module
+
         log_module._configured = False
 
         configure_logging(level="DEBUG", json_format=True, stream=stream)
@@ -255,6 +256,7 @@ class TestConfigureLogging:
         """Test configuring with human format."""
         stream = io.StringIO()
         import gmail_multi_user.logging as log_module
+
         log_module._configured = False
 
         configure_logging(level="DEBUG", json_format=False, stream=stream)

@@ -177,12 +177,18 @@ async def init_config_impl(
         next_steps.append(
             "Set up Google OAuth credentials at https://console.cloud.google.com/apis/credentials"
         )
-        next_steps.append("Update google.client_id and google.client_secret in the config")
+        next_steps.append(
+            "Update google.client_id and google.client_secret in the config"
+        )
 
     if database_type == "supabase" and (not supabase_url or not supabase_key):
         next_steps.append("Set up Supabase project at https://supabase.com")
-        next_steps.append("Update storage.supabase.url and storage.supabase.key in the config")
-        next_steps.append("Run the migration SQL from migrations/supabase/001_initial.sql")
+        next_steps.append(
+            "Update storage.supabase.url and storage.supabase.key in the config"
+        )
+        next_steps.append(
+            "Run the migration SQL from migrations/supabase/001_initial.sql"
+        )
 
     if database_type == "sqlite":
         next_steps.append("Database will be created automatically on first use")
@@ -310,7 +316,9 @@ async def run_migrations_impl() -> dict[str, Any]:
             return {
                 "migrations_run": [],
                 "already_applied": migrations_applied,
-                "current_version": migrations_applied[-1] if migrations_applied else None,
+                "current_version": migrations_applied[-1]
+                if migrations_applied
+                else None,
                 "message": "Supabase migrations already applied",
             }
         else:

@@ -116,7 +116,9 @@ class GmailMCPError(Exception):
 
     def __repr__(self) -> str:
         """Return a detailed string representation."""
-        return f"{self.__class__.__name__}(code={self.code!r}, message={self.message!r})"
+        return (
+            f"{self.__class__.__name__}(code={self.code!r}, message={self.message!r})"
+        )
 
 
 class ConfigError(GmailMCPError):

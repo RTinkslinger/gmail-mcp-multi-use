@@ -27,7 +27,9 @@ def mock_storage():
 def mock_token_manager():
     """Create mock token manager."""
     manager = AsyncMock()
-    manager.get_valid_token = AsyncMock(return_value=MagicMock(access_token="test_token"))
+    manager.get_valid_token = AsyncMock(
+        return_value=MagicMock(access_token="test_token")
+    )
     return manager
 
 
@@ -173,8 +175,18 @@ class TestGmailServiceMessage:
     async def test_batch_get_messages(self, service, mock_api_client):
         """Test batch getting messages."""
         mock_api_client.batch_get_messages.return_value = [
-            {"id": "msg1", "threadId": "t1", "labelIds": ["INBOX"], "payload": {"headers": []}},
-            {"id": "msg2", "threadId": "t2", "labelIds": ["INBOX"], "payload": {"headers": []}},
+            {
+                "id": "msg1",
+                "threadId": "t1",
+                "labelIds": ["INBOX"],
+                "payload": {"headers": []},
+            },
+            {
+                "id": "msg2",
+                "threadId": "t2",
+                "labelIds": ["INBOX"],
+                "payload": {"headers": []},
+            },
         ]
 
         messages = await service.batch_get_messages("conn_123", ["msg1", "msg2"])

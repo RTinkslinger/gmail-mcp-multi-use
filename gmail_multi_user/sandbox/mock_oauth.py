@@ -98,6 +98,7 @@ class MockGoogleOAuthClient:
         """
         # Simulate some latency
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         return MockTokenResponse(
@@ -121,6 +122,7 @@ class MockGoogleOAuthClient:
             MockTokenResponse with new fake tokens.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         return MockTokenResponse(
@@ -141,6 +143,7 @@ class MockGoogleOAuthClient:
             MockUserInfo with sandbox user details.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
 
         return MockUserInfo(
@@ -157,5 +160,6 @@ class MockGoogleOAuthClient:
             token: Token to revoke.
         """
         import asyncio
+
         await asyncio.sleep(self._sandbox_config.latency_ms / 1000)
         # Always succeeds in sandbox mode

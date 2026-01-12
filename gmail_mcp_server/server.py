@@ -188,7 +188,9 @@ def format_response(data: Any) -> dict[str, Any]:
                 result[key] = format_datetime(value)
             elif isinstance(value, list):
                 result[key] = [
-                    format_response(item) if hasattr(item, "__dataclass_fields__") else item
+                    format_response(item)
+                    if hasattr(item, "__dataclass_fields__")
+                    else item
                     for item in value
                 ]
         return result

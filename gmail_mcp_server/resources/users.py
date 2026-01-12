@@ -29,17 +29,21 @@ async def get_users_list() -> str:
     # Count connections per user
     user_connection_counts: dict[str, int] = {}
     for conn in connections:
-        user_connection_counts[conn.user_id] = user_connection_counts.get(conn.user_id, 0) + 1
+        user_connection_counts[conn.user_id] = (
+            user_connection_counts.get(conn.user_id, 0) + 1
+        )
 
     result = []
     for user in users:
-        result.append({
-            "id": user.id,
-            "external_user_id": user.external_user_id,
-            "email": user.email,
-            "connection_count": user_connection_counts.get(user.id, 0),
-            "created_at": format_datetime(user.created_at),
-        })
+        result.append(
+            {
+                "id": user.id,
+                "external_user_id": user.external_user_id,
+                "email": user.email,
+                "connection_count": user_connection_counts.get(user.id, 0),
+                "created_at": format_datetime(user.created_at),
+            }
+        )
 
     return json.dumps(result, indent=2)
 
@@ -67,15 +71,17 @@ async def get_user_connections(user_id: str) -> str:
 
     result = []
     for conn in connections:
-        result.append({
-            "id": conn.id,
-            "gmail_address": conn.gmail_address,
-            "scopes": conn.scopes,
-            "is_active": conn.is_active,
-            "created_at": format_datetime(conn.created_at),
-            "updated_at": format_datetime(conn.updated_at),
-            "last_used_at": format_datetime(conn.last_used_at),
-            "token_expires_at": format_datetime(conn.token_expires_at),
-        })
+        result.append(
+            {
+                "id": conn.id,
+                "gmail_address": conn.gmail_address,
+                "scopes": conn.scopes,
+                "is_active": conn.is_active,
+                "created_at": format_datetime(conn.created_at),
+                "updated_at": format_datetime(conn.updated_at),
+                "last_used_at": format_datetime(conn.last_used_at),
+                "token_expires_at": format_datetime(conn.token_expires_at),
+            }
+        )
 
     return json.dumps(result, indent=2)

@@ -114,7 +114,9 @@ class TestConfigLoader:
         try:
             config = ConfigLoader.load(config_path=temp_config_file)
             # File values take precedence when file is explicitly loaded
-            assert config.google.client_id == "test-client-id.apps.googleusercontent.com"
+            assert (
+                config.google.client_id == "test-client-id.apps.googleusercontent.com"
+            )
         finally:
             os.environ.pop("GMAIL_MCP_GOOGLE__CLIENT_ID", None)
             os.environ.pop("GMAIL_MCP_ENCRYPTION_KEY", None)
@@ -179,7 +181,9 @@ class TestConfigLoader:
 
         try:
             config = ConfigLoader.load()
-            assert config.google.client_id == "test-client-id.apps.googleusercontent.com"
+            assert (
+                config.google.client_id == "test-client-id.apps.googleusercontent.com"
+            )
         finally:
             os.environ.pop("GMAIL_MCP_CONFIG", None)
 

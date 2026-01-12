@@ -134,8 +134,7 @@ class Config(BaseSettings):
             except ValueError:
                 pass
         raise ValueError(
-            "encryption_key must be a valid Fernet key "
-            "(44 char base64 or 64 char hex)"
+            "encryption_key must be a valid Fernet key (44 char base64 or 64 char hex)"
         )
 
 
@@ -287,12 +286,14 @@ class ConfigLoader:
             try:
                 config = cls.load()
             except ConfigError as e:
-                issues.append(ValidationIssue(
-                    field="config",
-                    message=str(e),
-                    severity="error",
-                    suggestion=e.suggestion,
-                ))
+                issues.append(
+                    ValidationIssue(
+                        field="config",
+                        message=str(e),
+                        severity="error",
+                        suggestion=e.suggestion,
+                    )
+                )
                 return ValidationResult(valid=False, issues=issues, warnings=warnings)
 
         # Validate encryption key
@@ -355,15 +356,17 @@ def _validate_encryption_key(key: str) -> list[ValidationIssue]:
 
     # Check if it's a placeholder
     if "YOUR_" in key or key == "":
-        issues.append(ValidationIssue(
-            field="encryption_key",
-            message="Encryption key appears to be a placeholder",
-            severity="error",
-            suggestion=(
-                "Generate a real encryption key with: "
-                "python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\""
-            ),
-        ))
+        issues.append(
+            ValidationIssue(
+                field="encryption_key",
+                message="Encryption key appears to be a placeholder",
+                severity="error",
+                suggestion=(
+                    "Generate a real encryption key with: "
+                    'python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"'
+                ),
+            )
+        )
         return issues
 
     # Try to create a Fernet instance to validate the key
@@ -387,20 +390,24 @@ def _validate_encryption_key(key: str) -> list[ValidationIssue]:
             except ValueError:
                 pass
 
-        issues.append(ValidationIssue(
-            field="encryption_key",
-            message="Encryption key format is invalid",
-            severity="error",
-            suggestion="Key must be 44-character base64 or 64-character hex string.",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="encryption_key",
+                message="Encryption key format is invalid",
+                severity="error",
+                suggestion="Key must be 44-character base64 or 64-character hex string.",
+            )
+        )
 
     except Exception as e:
-        issues.append(ValidationIssue(
-            field="encryption_key",
-            message=f"Cannot validate encryption key: {e}",
-            severity="error",
-            suggestion="Ensure cryptography package is installed.",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="encryption_key",
+                message=f"Cannot validate encryption key: {e}",
+                severity="error",
+                suggestion="Ensure cryptography package is installed.",
+            )
+        )
 
     return issues
 
@@ -411,41 +418,49 @@ def _validate_google_oauth(google: GoogleOAuthConfig) -> list[ValidationIssue]:
 
     # Check client_id
     if not google.client_id or "YOUR_" in google.client_id:
-        issues.append(ValidationIssue(
-            field="google.client_id",
-            message="Google client_id is missing or placeholder",
-            severity="error",
-            suggestion="Get OAuth credentials from https://console.cloud.google.com/apis/credentials",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="google.client_id",
+                message="Google client_id is missing or placeholder",
+                severity="error",
+                suggestion="Get OAuth credentials from https://console.cloud.google.com/apis/credentials",
+            )
+        )
 
     # Check client_secret
     if not google.client_secret or "YOUR_" in google.client_secret:
-        issues.append(ValidationIssue(
-            field="google.client_secret",
-            message="Google client_secret is missing or placeholder",
-            severity="error",
-            suggestion="Get OAuth credentials from https://console.cloud.google.com/apis/credentials",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="google.client_secret",
+                message="Google client_secret is missing or placeholder",
+                severity="error",
+                suggestion="Get OAuth credentials from https://console.cloud.google.com/apis/credentials",
+            )
+        )
 
     # Validate redirect_uri format
     if not google.redirect_uri.startswith(("http://", "https://")):
-        issues.append(ValidationIssue(
-            field="google.redirect_uri",
-            message="redirect_uri must start with http:// or https://",
-            severity="error",
-            suggestion="Use a valid URL like http://localhost:8000/oauth/callback",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="google.redirect_uri",
+                message="redirect_uri must start with http:// or https://",
+                severity="error",
+                suggestion="Use a valid URL like http://localhost:8000/oauth/callback",
+            )
+        )
 
     # Check for required scopes
     required_scopes = {"https://www.googleapis.com/auth/userinfo.email"}
     configured_scopes = set(google.scopes)
     if not required_scopes.issubset(configured_scopes):
-        issues.append(ValidationIssue(
-            field="google.scopes",
-            message="Missing required scope: userinfo.email",
-            severity="warning",
-            suggestion="Add https://www.googleapis.com/auth/userinfo.email to scopes for email address retrieval.",
-        ))
+        issues.append(
+            ValidationIssue(
+                field="google.scopes",
+                message="Missing required scope: userinfo.email",
+                severity="warning",
+                suggestion="Add https://www.googleapis.com/auth/userinfo.email to scopes for email address retrieval.",
+            )
+        )
 
     return issues
 
@@ -457,57 +472,69 @@ def _validate_storage(storage: StorageConfig) -> list[ValidationIssue]:
     if storage.type == "sqlite":
         # SQLite validation
         if storage.sqlite is None:
-            issues.append(ValidationIssue(
-                field="storage.sqlite",
-                message="SQLite configuration is missing",
-                severity="error",
-                suggestion="Add storage.sqlite.path to configuration.",
-            ))
+            issues.append(
+                ValidationIssue(
+                    field="storage.sqlite",
+                    message="SQLite configuration is missing",
+                    severity="error",
+                    suggestion="Add storage.sqlite.path to configuration.",
+                )
+            )
         else:
             # Check if parent directory exists
             db_path = Path(storage.sqlite.path)
             if not db_path.parent.exists() and str(db_path.parent) != ".":
-                issues.append(ValidationIssue(
-                    field="storage.sqlite.path",
-                    message=f"Parent directory does not exist: {db_path.parent}",
-                    severity="warning",
-                    suggestion="Create the directory or use a different path.",
-                ))
+                issues.append(
+                    ValidationIssue(
+                        field="storage.sqlite.path",
+                        message=f"Parent directory does not exist: {db_path.parent}",
+                        severity="warning",
+                        suggestion="Create the directory or use a different path.",
+                    )
+                )
 
     elif storage.type == "supabase":
         # Supabase validation
         if storage.supabase is None:
-            issues.append(ValidationIssue(
-                field="storage.supabase",
-                message="Supabase configuration is missing",
-                severity="error",
-                suggestion="Add storage.supabase.url and storage.supabase.key to configuration.",
-            ))
+            issues.append(
+                ValidationIssue(
+                    field="storage.supabase",
+                    message="Supabase configuration is missing",
+                    severity="error",
+                    suggestion="Add storage.supabase.url and storage.supabase.key to configuration.",
+                )
+            )
         else:
             if not storage.supabase.url or "YOUR_" in storage.supabase.url:
-                issues.append(ValidationIssue(
-                    field="storage.supabase.url",
-                    message="Supabase URL is missing or placeholder",
-                    severity="error",
-                    suggestion="Get URL from Supabase project settings.",
-                ))
+                issues.append(
+                    ValidationIssue(
+                        field="storage.supabase.url",
+                        message="Supabase URL is missing or placeholder",
+                        severity="error",
+                        suggestion="Get URL from Supabase project settings.",
+                    )
+                )
 
             if not storage.supabase.key or "YOUR_" in storage.supabase.key:
-                issues.append(ValidationIssue(
-                    field="storage.supabase.key",
-                    message="Supabase key is missing or placeholder",
-                    severity="error",
-                    suggestion="Get service role key from Supabase project settings > API.",
-                ))
+                issues.append(
+                    ValidationIssue(
+                        field="storage.supabase.key",
+                        message="Supabase key is missing or placeholder",
+                        severity="error",
+                        suggestion="Get service role key from Supabase project settings > API.",
+                    )
+                )
 
             # Warn if not using service role key
             if storage.supabase.key and not storage.supabase.key.startswith("eyJ"):
-                issues.append(ValidationIssue(
-                    field="storage.supabase.key",
-                    message="Supabase key doesn't look like a JWT",
-                    severity="warning",
-                    suggestion="Ensure you're using the service role key, not anon key.",
-                ))
+                issues.append(
+                    ValidationIssue(
+                        field="storage.supabase.key",
+                        message="Supabase key doesn't look like a JWT",
+                        severity="warning",
+                        suggestion="Ensure you're using the service role key, not anon key.",
+                    )
+                )
 
     return issues
 

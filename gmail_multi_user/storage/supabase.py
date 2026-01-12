@@ -427,8 +427,10 @@ class SupabaseBackend(StorageBackend):
             id=data["id"],
             external_user_id=data["external_user_id"],
             email=data.get("email"),
-            created_at=cls._parse_datetime(data["created_at"]) or datetime.now(timezone.utc),
-            updated_at=cls._parse_datetime(data["updated_at"]) or datetime.now(timezone.utc),
+            created_at=cls._parse_datetime(data["created_at"])
+            or datetime.now(timezone.utc),
+            updated_at=cls._parse_datetime(data["updated_at"])
+            or datetime.now(timezone.utc),
         )
 
     @classmethod
@@ -444,11 +446,14 @@ class SupabaseBackend(StorageBackend):
             gmail_address=data["gmail_address"],
             access_token_encrypted=data["access_token_encrypted"],
             refresh_token_encrypted=data["refresh_token_encrypted"],
-            token_expires_at=cls._parse_datetime(data["token_expires_at"]) or datetime.now(timezone.utc),
+            token_expires_at=cls._parse_datetime(data["token_expires_at"])
+            or datetime.now(timezone.utc),
             scopes=scopes,
             is_active=data["is_active"],
-            created_at=cls._parse_datetime(data["created_at"]) or datetime.now(timezone.utc),
-            updated_at=cls._parse_datetime(data["updated_at"]) or datetime.now(timezone.utc),
+            created_at=cls._parse_datetime(data["created_at"])
+            or datetime.now(timezone.utc),
+            updated_at=cls._parse_datetime(data["updated_at"])
+            or datetime.now(timezone.utc),
             last_used_at=cls._parse_datetime(data.get("last_used_at")),
         )
 
@@ -466,6 +471,8 @@ class SupabaseBackend(StorageBackend):
             scopes=scopes,
             redirect_uri=data["redirect_uri"],
             code_verifier=data["code_verifier"],
-            expires_at=cls._parse_datetime(data["expires_at"]) or datetime.now(timezone.utc),
-            created_at=cls._parse_datetime(data["created_at"]) or datetime.now(timezone.utc),
+            expires_at=cls._parse_datetime(data["expires_at"])
+            or datetime.now(timezone.utc),
+            created_at=cls._parse_datetime(data["created_at"])
+            or datetime.now(timezone.utc),
         )

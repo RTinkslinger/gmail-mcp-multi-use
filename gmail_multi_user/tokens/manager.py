@@ -261,7 +261,10 @@ class TokenManager:
                     token_expires_at=token_response.expires_at,
                 )
 
-                logger.info("Token refreshed successfully", expires_at=str(token_response.expires_at))
+                logger.info(
+                    "Token refreshed successfully",
+                    expires_at=str(token_response.expires_at),
+                )
                 return updated
 
             except TokenError:

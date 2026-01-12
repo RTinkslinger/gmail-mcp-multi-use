@@ -197,9 +197,7 @@ class MessageComposer:
         """
         return MIMEText(body_html, "html", "utf-8")
 
-    def _create_alternative_part(
-        self, body: str, body_html: str
-    ) -> MIMEMultipart:
+    def _create_alternative_part(self, body: str, body_html: str) -> MIMEMultipart:
         """Create a multipart/alternative with plain and HTML.
 
         Args:
@@ -214,9 +212,7 @@ class MessageComposer:
         msg.attach(self._create_html_part(body_html))
         return msg
 
-    def _create_attachment_part(
-        self, attachment: AttachmentInput
-    ) -> MIMEBase:
+    def _create_attachment_part(self, attachment: AttachmentInput) -> MIMEBase:
         """Create an attachment MIME part.
 
         Args:

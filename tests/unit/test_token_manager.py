@@ -92,7 +92,9 @@ class TestGetValidToken:
     """Tests for get_valid_token."""
 
     @pytest.mark.asyncio
-    async def test_get_valid_token_success(self, token_manager, mock_storage, valid_connection):
+    async def test_get_valid_token_success(
+        self, token_manager, mock_storage, valid_connection
+    ):
         """Test getting valid token without refresh."""
         mock_storage.get_connection.return_value = valid_connection
 
@@ -120,7 +122,10 @@ class TestGetValidToken:
 
         # Mock storage update
         updated_connection = Connection(
-            **{**expiring_connection.__dict__, "token_expires_at": datetime.utcnow() + timedelta(hours=1)}
+            **{
+                **expiring_connection.__dict__,
+                "token_expires_at": datetime.utcnow() + timedelta(hours=1),
+            }
         )
         mock_storage.update_connection_tokens.return_value = updated_connection
 
@@ -130,7 +135,9 @@ class TestGetValidToken:
         token_manager._google_client.refresh_access_token.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_get_valid_token_connection_not_found(self, token_manager, mock_storage):
+    async def test_get_valid_token_connection_not_found(
+        self, token_manager, mock_storage
+    ):
         """Test error when connection not found."""
         mock_storage.get_connection.return_value = None
 
@@ -138,7 +145,9 @@ class TestGetValidToken:
             await token_manager.get_valid_token("nonexistent")
 
     @pytest.mark.asyncio
-    async def test_get_valid_token_connection_inactive(self, token_manager, mock_storage):
+    async def test_get_valid_token_connection_inactive(
+        self, token_manager, mock_storage
+    ):
         """Test error when connection is inactive."""
         inactive_connection = Connection(
             id="conn_123",
@@ -163,7 +172,9 @@ class TestRefreshToken:
     """Tests for refresh_token."""
 
     @pytest.mark.asyncio
-    async def test_refresh_token_success(self, token_manager, mock_storage, mock_encryption, valid_connection):
+    async def test_refresh_token_success(
+        self, token_manager, mock_storage, mock_encryption, valid_connection
+    ):
         """Test force refreshing token."""
         mock_storage.get_connection.return_value = valid_connection
 
@@ -194,7 +205,9 @@ class TestRefreshExpiringTokens:
     """Tests for refresh_expiring_tokens."""
 
     @pytest.mark.asyncio
-    async def test_refresh_expiring_tokens(self, token_manager, mock_storage, mock_encryption):
+    async def test_refresh_expiring_tokens(
+        self, token_manager, mock_storage, mock_encryption
+    ):
         """Test batch refreshing expiring tokens."""
         expiring_connections = [
             Connection(
@@ -229,7 +242,9 @@ class TestRefreshExpiringTokens:
         assert token_manager._google_client.refresh_access_token.call_count == 3
 
     @pytest.mark.asyncio
-    async def test_refresh_expiring_tokens_marks_failed_inactive(self, token_manager, mock_storage, mock_encryption):
+    async def test_refresh_expiring_tokens_marks_failed_inactive(
+        self, token_manager, mock_storage, mock_encryption
+    ):
         """Test that failed refreshes deactivate connections."""
         expiring_connections = [
             Connection(
@@ -264,7 +279,9 @@ class TestInternalRefreshToken:
     """Tests for _refresh_token internal method."""
 
     @pytest.mark.asyncio
-    async def test_refresh_token_encryption_error(self, token_manager, mock_encryption, valid_connection):
+    async def test_refresh_token_encryption_error(
+        self, token_manager, mock_encryption, valid_connection
+    ):
         """Test handling encryption errors during refresh."""
         mock_encryption.decrypt.side_effect = Exception("Decryption failed")
 
@@ -274,7 +291,9 @@ class TestInternalRefreshToken:
         assert exc_info.value.code == "encryption_error"
 
     @pytest.mark.asyncio
-    async def test_refresh_token_no_refresh_token(self, token_manager, mock_encryption, valid_connection):
+    async def test_refresh_token_no_refresh_token(
+        self, token_manager, mock_encryption, valid_connection
+    ):
         """Test error when no refresh token available."""
         mock_encryption.decrypt.return_value = ""  # Empty refresh token
 
@@ -284,12 +303,16 @@ class TestInternalRefreshToken:
         assert exc_info.value.code == "needs_reauth"
 
     @pytest.mark.asyncio
-    async def test_refresh_token_google_error(self, token_manager, mock_encryption, valid_connection):
+    async def test_refresh_token_google_error(
+        self, token_manager, mock_encryption, valid_connection
+    ):
         """Test handling Google API errors during refresh."""
         mock_encryption.decrypt.return_value = "valid_refresh_token"
 
         token_manager._google_client = AsyncMock()
-        token_manager._google_client.refresh_access_token.side_effect = Exception("API error")
+        token_manager._google_client.refresh_access_token.side_effect = Exception(
+            "API error"
+        )
 
         with pytest.raises(TokenError) as exc_info:
             await token_manager._refresh_token(valid_connection)
@@ -329,7 +352,8 @@ class TestNeedsRefresh:
             gmail_address="user@gmail.com",
             access_token_encrypted="encrypted",
             refresh_token_encrypted="encrypted",
-            token_expires_at=datetime.utcnow() + timedelta(minutes=2),  # Within 5-min buffer
+            token_expires_at=datetime.utcnow()
+            + timedelta(minutes=2),  # Within 5-min buffer
             scopes=[],
             is_active=True,
             created_at=datetime.utcnow(),
@@ -347,7 +371,8 @@ class TestNeedsRefresh:
             gmail_address="user@gmail.com",
             access_token_encrypted="encrypted",
             refresh_token_encrypted="encrypted",
-            token_expires_at=datetime.utcnow() + timedelta(hours=1),  # Well beyond buffer
+            token_expires_at=datetime.utcnow()
+            + timedelta(hours=1),  # Well beyond buffer
             scopes=[],
             is_active=True,
             created_at=datetime.utcnow(),
@@ -362,7 +387,9 @@ class TestCheckConnectionValid:
     """Tests for check_connection_valid."""
 
     @pytest.mark.asyncio
-    async def test_check_connection_valid_success(self, token_manager, mock_storage, valid_connection):
+    async def test_check_connection_valid_success(
+        self, token_manager, mock_storage, valid_connection
+    ):
         """Test checking valid connection."""
         mock_storage.get_connection.return_value = valid_connection
 
