@@ -58,3 +58,8 @@ credentials.json
 *.pem
 *.key
 gmail_config.yaml
+
+# Internal development files
+*-prd*.md
+TRACES.md
+traces/
