@@ -15,8 +15,8 @@ import tempfile
 from datetime import datetime, timedelta
 
 import pytest
-from cryptography.fernet import InvalidToken
 
+from gmail_multi_user.exceptions import TokenError
 from gmail_multi_user.storage.sqlite import SQLiteBackend
 from gmail_multi_user.tokens.encryption import TokenEncryption
 
@@ -72,7 +72,7 @@ class TestTokenEncryption:
         encrypted = encryption1.encrypt("secret_data")
 
         # Wrong key should fail
-        with pytest.raises(InvalidToken):
+        with pytest.raises(TokenError):
             encryption2.decrypt(encrypted)
 
     def test_tampered_ciphertext_fails(self):
@@ -85,7 +85,7 @@ class TestTokenEncryption:
         # Tamper with the ciphertext
         tampered = encrypted[:-5] + "XXXXX"
 
-        with pytest.raises(InvalidToken):
+        with pytest.raises(TokenError):
             encryption.decrypt(tampered)
 
     def test_empty_string_encryption(self):
