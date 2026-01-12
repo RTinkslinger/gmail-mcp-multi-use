@@ -8,7 +8,7 @@ from __future__ import annotations
 import base64
 from typing import Any, Literal
 
-from gmail_mcp_server.server import mcp, state, format_response
+from gmail_mcp_server.server import mcp, state
 
 
 def format_message(msg: Any) -> dict[str, Any]:

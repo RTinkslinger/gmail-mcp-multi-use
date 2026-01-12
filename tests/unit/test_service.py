@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from gmail_multi_user.service import GmailService
-from gmail_multi_user.types import Message, Contact, Attachment
 
 
 @pytest.fixture
@@ -333,7 +331,7 @@ class TestGmailServiceTrash:
             "labelIds": ["TRASH"],
         }
 
-        result = await service.trash("conn_123", "msg123")
+        await service.trash("conn_123", "msg123")
 
         mock_api_client.trash_message.assert_called_once()
 
@@ -345,7 +343,7 @@ class TestGmailServiceTrash:
             "labelIds": ["INBOX"],
         }
 
-        result = await service.untrash("conn_123", "msg123")
+        await service.untrash("conn_123", "msg123")
 
         mock_api_client.untrash_message.assert_called_once()
 

@@ -84,8 +84,8 @@ async def main() -> int:
     print("[4/6] Listing labels...")
     try:
         labels = await service.list_labels(connection.id)
-        system_labels = [l for l in labels if l.type == "system"]
-        user_labels = [l for l in labels if l.type == "user"]
+        system_labels = [label for label in labels if label.type == "system"]
+        user_labels = [label for label in labels if label.type == "user"]
         print(f"      System labels: {len(system_labels)}")
         print(f"      User labels: {len(user_labels)}")
         for label in labels[:5]:

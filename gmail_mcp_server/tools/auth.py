@@ -11,8 +11,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from gmail_mcp_server.server import mcp, state, format_datetime
-
+from gmail_mcp_server.server import format_datetime, mcp, state
 
 # =============================================================================
 # Implementation Functions (used by both MCP tools and CLI)

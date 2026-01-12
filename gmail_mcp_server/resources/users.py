@@ -6,9 +6,8 @@ These resources provide user and connection information.
 from __future__ import annotations
 
 import json
-from typing import Any
 
-from gmail_mcp_server.server import mcp, state, format_datetime
+from gmail_mcp_server.server import format_datetime, mcp, state
 
 
 @mcp.resource("users://list")

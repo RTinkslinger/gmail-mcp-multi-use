@@ -12,7 +12,7 @@ from gmail_multi_user.exceptions import (
     ConnectionNotFoundError,
     TokenError,
 )
-from gmail_multi_user.oauth.google import GoogleOAuthClient, TokenResponse
+from gmail_multi_user.oauth.google import GoogleOAuthClient
 from gmail_multi_user.tokens.manager import TokenManager
 
 

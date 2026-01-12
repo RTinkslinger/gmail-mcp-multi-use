@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from gmail_multi_user.exceptions import GmailAPIError, RateLimitError, GMAIL_RATE_LIMIT
+from gmail_multi_user.exceptions import GMAIL_RATE_LIMIT, GmailAPIError, RateLimitError
 from gmail_multi_user.gmail.client import GmailAPIClient
 
 

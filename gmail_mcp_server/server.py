@@ -6,7 +6,6 @@ management for the Gmail multi-user integration.
 
 from __future__ import annotations
 
-import json
 from contextlib import asynccontextmanager
 from dataclasses import asdict
 from datetime import datetime
@@ -203,18 +202,14 @@ def register_all() -> None:
     """
     # Import and register tools, resources, and prompts
     # These imports will register their decorators with the mcp instance
-    from gmail_mcp_server.tools import setup, auth, read, write, manage  # noqa: F401
-    from gmail_mcp_server.resources import config as config_resources  # noqa: F401
-    from gmail_mcp_server.resources import users as user_resources  # noqa: F401
-    from gmail_mcp_server.resources import gmail as gmail_resources  # noqa: F401
-    from gmail_mcp_server.resources import docs as doc_resources  # noqa: F401
     from gmail_mcp_server.prompts import (  # noqa: F401
         setup as setup_prompts,
-        connect as connect_prompts,
-        diagnose as diagnose_prompts,
-        generate_ui as ui_prompts,
-        build_agent as agent_prompts,
     )
+    from gmail_mcp_server.resources import config as config_resources  # noqa: F401
+    from gmail_mcp_server.resources import docs as doc_resources  # noqa: F401
+    from gmail_mcp_server.resources import gmail as gmail_resources  # noqa: F401
+    from gmail_mcp_server.resources import users as user_resources  # noqa: F401
+    from gmail_mcp_server.tools import auth, manage, read, setup, write  # noqa: F401
 
 
 # Register on import

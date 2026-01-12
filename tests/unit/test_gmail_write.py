@@ -83,7 +83,7 @@ class TestSendMessage:
             )
         )
 
-        result = await api_client.send_message(
+        await api_client.send_message(
             token="test_token",
             raw_message="base64encoded",
             thread_id="thread456",
@@ -188,7 +188,7 @@ class TestDraftOperations:
             return_value=create_response(200, {"id": "draft123"})
         )
 
-        result = await api_client.update_draft(
+        await api_client.update_draft(
             token="test_token",
             draft_id="draft123",
             raw_message="updated_base64",
@@ -344,7 +344,7 @@ class TestLabelModification:
             return_value=create_response(204)
         )
 
-        result = await api_client.batch_modify_labels(
+        await api_client.batch_modify_labels(
             token="test_token",
             message_ids=["msg1", "msg2", "msg3"],
             add_labels=["STARRED"],

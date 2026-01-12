@@ -8,6 +8,6 @@ This package contains all MCP tools organized by category:
 - manage: Label management, archive, trash
 """
 
-from gmail_mcp_server.tools import setup, auth, read, write, manage
+from gmail_mcp_server.tools import auth, manage, read, setup, write
 
 __all__ = ["setup", "auth", "read", "write", "manage"]

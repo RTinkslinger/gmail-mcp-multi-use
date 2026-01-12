@@ -24,7 +24,7 @@ from pathlib import Path
 # Add the package to the path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from gmail_multi_user.config import Config, ConfigLoader
+from gmail_multi_user.config import ConfigLoader
 from gmail_multi_user.service import GmailService
 from gmail_multi_user.storage.sqlite import SQLiteBackend
 from gmail_multi_user.tokens.encryption import TokenEncryption
@@ -87,7 +87,7 @@ async def main() -> None:
             body="This is a test draft created by the Gmail MCP library.\n\nThis draft will be deleted after testing.",
             body_html="<h1>Test Draft</h1><p>This is a test draft created by the Gmail MCP library.</p>",
         )
-        print(f"Draft created!")
+        print("Draft created!")
         print(f"  Draft ID: {draft_result.draft_id}")
         print(f"  Message ID: {draft_result.message_id}")
 
@@ -104,7 +104,7 @@ async def main() -> None:
             subject="Updated Test Draft from Gmail MCP",
             body="This draft has been updated!\n\nThe recipient and subject were changed.",
         )
-        print(f"Draft updated!")
+        print("Draft updated!")
         print(f"  Draft ID: {updated_draft.draft_id}")
 
         # Test 4: Search for messages and test label operations

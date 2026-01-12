@@ -6,15 +6,12 @@ token management, Gmail API calls, and connection updates.
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING, Literal
 
 from gmail_multi_user.gmail.client import GmailAPIClient
-from gmail_multi_user.logging import LogContext, get_logger
-
-logger = get_logger(__name__)
 from gmail_multi_user.gmail.composer import MessageComposer
 from gmail_multi_user.gmail.parser import MessageParser, decode_attachment_data
+from gmail_multi_user.logging import LogContext, get_logger
 from gmail_multi_user.types import (
     AttachmentData,
     AttachmentInput,
@@ -29,8 +26,9 @@ from gmail_multi_user.types import (
 if TYPE_CHECKING:
     from gmail_multi_user.config import Config
     from gmail_multi_user.storage.base import StorageBackend
-    from gmail_multi_user.tokens.encryption import TokenEncryption
     from gmail_multi_user.tokens.manager import TokenManager
+
+logger = get_logger(__name__)
 
 
 class GmailService:

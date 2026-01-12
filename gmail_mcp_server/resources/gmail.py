@@ -6,7 +6,6 @@ These resources provide Gmail account information like labels and profiles.
 from __future__ import annotations
 
 import json
-from typing import Any
 
 from gmail_mcp_server.server import mcp, state
 

@@ -15,7 +15,6 @@ from typing import Any
 
 from gmail_mcp_server.server import mcp
 
-
 # =============================================================================
 # Implementation Functions (used by both MCP tools and CLI)
 # =============================================================================

@@ -6,9 +6,8 @@ These resources provide configuration status and schema information.
 from __future__ import annotations
 
 import json
-from typing import Any
 
-from gmail_mcp_server.server import mcp, state
+from gmail_mcp_server.server import mcp
 
 
 @mcp.resource("config://status")

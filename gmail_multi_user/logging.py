@@ -28,7 +28,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 # Context variables for request tracing
-_log_context: ContextVar[dict[str, Any]] = ContextVar("log_context", default={})
+_log_context: ContextVar[dict[str, Any] | None] = ContextVar("log_context", default=None)
 
 
 class LogContext:
@@ -45,9 +45,10 @@ class LogContext:
         self._context = kwargs
         self._token: Any = None
 
-    def __enter__(self) -> "LogContext":
+    def __enter__(self) -> LogContext:
         """Enter context, merging with existing context."""
-        current = _log_context.get().copy()
+        existing = _log_context.get()
+        current = existing.copy() if existing else {}
         current.update(self._context)
         self._token = _log_context.set(current)
         return self
@@ -60,12 +61,14 @@ class LogContext:
 
 def get_context() -> dict[str, Any]:
     """Get the current logging context."""
-    return _log_context.get().copy()
+    ctx = _log_context.get()
+    return ctx.copy() if ctx else {}
 
 
 def set_context(**kwargs: Any) -> None:
     """Set logging context values (use LogContext for scoped context)."""
-    current = _log_context.get().copy()
+    existing = _log_context.get()
+    current = existing.copy() if existing else {}
     current.update(kwargs)
     _log_context.set(current)
 

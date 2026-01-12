@@ -63,7 +63,7 @@ class PKCE:
         return "S256"
 
     @classmethod
-    def generate(cls, length: int = DEFAULT_VERIFIER_LENGTH) -> "PKCE":
+    def generate(cls, length: int = DEFAULT_VERIFIER_LENGTH) -> PKCE:
         """Generate a new PKCE instance with random verifier.
 
         Args:

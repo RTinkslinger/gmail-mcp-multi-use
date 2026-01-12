@@ -7,6 +7,6 @@ This package contains all MCP resources:
 - docs: Embedded documentation
 """
 
-from gmail_mcp_server.resources import config, users, gmail, docs
+from gmail_mcp_server.resources import config, docs, gmail, users
 
 __all__ = ["config", "users", "gmail", "docs"]

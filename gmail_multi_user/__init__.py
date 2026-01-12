@@ -10,23 +10,13 @@ Example:
     messages = client.search(connection_id="conn_123", query="is:unread")
 """
 
-from gmail_multi_user.config import Config, ConfigLoader, ValidationIssue, ValidationResult
-from gmail_multi_user.logging import (
-    LogContext,
-    configure_logging,
-    get_logger,
+from gmail_multi_user.config import (
+    Config,
+    ConfigLoader,
+    ValidationIssue,
+    ValidationResult,
 )
 from gmail_multi_user.exceptions import (
-    # Exception classes
-    AuthError,
-    ConfigError,
-    ConnectionInactiveError,
-    ConnectionNotFoundError,
-    GmailAPIError,
-    GmailMCPError,
-    RateLimitError,
-    StorageError,
-    TokenError,
     # Error code constants
     AUTH_INVALID_CODE,
     AUTH_INVALID_STATE,
@@ -51,10 +41,25 @@ from gmail_multi_user.exceptions import (
     TOKEN_NEEDS_REAUTH,
     TOKEN_REFRESH_FAILED,
     TOKEN_REVOKED,
+    # Exception classes
+    AuthError,
+    ConfigError,
+    ConnectionInactiveError,
+    ConnectionNotFoundError,
+    GmailAPIError,
+    GmailMCPError,
+    RateLimitError,
+    StorageError,
+    TokenError,
     # Helper functions
     create_auth_error,
     create_config_error,
     create_gmail_api_error,
+)
+from gmail_multi_user.logging import (
+    LogContext,
+    configure_logging,
+    get_logger,
 )
 from gmail_multi_user.types import (
     Attachment,

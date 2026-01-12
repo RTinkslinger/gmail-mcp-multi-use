@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import base64
 import mimetypes
+from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email import encoders
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -146,7 +146,7 @@ class MessageComposer:
         if reply_all:
             # Add original To recipients (excluding self)
             # Add original CC recipients
-            all_to = [c.email for c in original_message.to]
+            [c.email for c in original_message.to]
             cc = [c.email for c in original_message.cc]
 
         # Build subject

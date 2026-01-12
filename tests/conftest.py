@@ -4,17 +4,21 @@ from __future__ import annotations
 
 import os
 import tempfile
+from collections.abc import AsyncGenerator, Generator
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
 
-from gmail_multi_user.config import Config, GoogleOAuthConfig, SQLiteConfig, StorageConfig
+from gmail_multi_user.config import (
+    Config,
+    GoogleOAuthConfig,
+    SQLiteConfig,
+    StorageConfig,
+)
 from gmail_multi_user.storage.sqlite import SQLiteBackend
 from gmail_multi_user.tokens.encryption import TokenEncryption
-
 
 # =============================================================================
 # Encryption Fixtures

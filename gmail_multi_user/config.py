@@ -369,6 +369,7 @@ def _validate_encryption_key(key: str) -> list[ValidationIssue]:
     # Try to create a Fernet instance to validate the key
     try:
         import base64
+
         from cryptography.fernet import Fernet
 
         # Try base64 format

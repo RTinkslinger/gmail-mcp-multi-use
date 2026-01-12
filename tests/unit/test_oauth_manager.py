@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from gmail_multi_user.exceptions import AuthError
 from gmail_multi_user.oauth.manager import OAuthManager
-from gmail_multi_user.types import OAuthState, Connection, User
+from gmail_multi_user.types import Connection, OAuthState, User
 
 
 @pytest.fixture

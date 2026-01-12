@@ -11,7 +11,7 @@ from typing import Any
 
 # Global sandbox state
 _sandbox_enabled: bool = False
-_sandbox_config: "SandboxConfig | None" = None
+_sandbox_config: SandboxConfig | None = None
 
 
 @dataclass

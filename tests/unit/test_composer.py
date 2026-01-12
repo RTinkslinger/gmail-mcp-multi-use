@@ -4,10 +4,6 @@ from __future__ import annotations
 
 import base64
 from email import message_from_bytes
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-import pytest
 
 from gmail_multi_user.gmail.composer import MessageComposer, guess_mime_type
 from gmail_multi_user.types import AttachmentInput, Contact, Message

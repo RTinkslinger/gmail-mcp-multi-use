@@ -11,7 +11,6 @@ import asyncio
 import socket
 import webbrowser
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from gmail_multi_user.types import CallbackResult
@@ -108,9 +107,6 @@ class LocalOAuthServer:
 
         # Start server
         try:
-            from starlette.applications import Starlette
-            from starlette.responses import HTMLResponse
-            from starlette.routing import Route
             import uvicorn
 
             app = self._create_app()
@@ -132,7 +128,7 @@ class LocalOAuthServer:
 
             # Open browser or print URL
             if open_browser:
-                print(f"\nOpening browser for authentication...")
+                print("\nOpening browser for authentication...")
                 print(f"If browser doesn't open, visit:\n{auth_result.auth_url}\n")
                 webbrowser.open(auth_result.auth_url)
             else:
@@ -178,7 +174,7 @@ class LocalOAuthServer:
                 error=str(e),
             )
 
-    def _create_app(self) -> "Starlette":
+    def _create_app(self):
         """Create the Starlette application for handling callbacks."""
         from starlette.applications import Starlette
         from starlette.responses import HTMLResponse

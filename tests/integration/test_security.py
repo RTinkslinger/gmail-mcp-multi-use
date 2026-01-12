@@ -15,6 +15,7 @@ import tempfile
 from datetime import datetime, timedelta
 
 import pytest
+from cryptography.fernet import InvalidToken
 
 from gmail_multi_user.storage.sqlite import SQLiteBackend
 from gmail_multi_user.tokens.encryption import TokenEncryption
@@ -28,15 +29,15 @@ class TestTokenEncryption:
         # Generate a valid Fernet key
         key = base64.urlsafe_b64encode(os.urandom(32)).decode()
         encryption = TokenEncryption(key)
-        
+
         plaintext = "sensitive_token_12345"
-        
+
         ciphertext1 = encryption.encrypt(plaintext)
         ciphertext2 = encryption.encrypt(plaintext)
-        
+
         # Due to random IV, ciphertexts should differ
         assert ciphertext1 != ciphertext2
-        
+
         # But both should decrypt to same plaintext
         assert encryption.decrypt(ciphertext1) == plaintext
         assert encryption.decrypt(ciphertext2) == plaintext
@@ -45,7 +46,7 @@ class TestTokenEncryption:
         """Test encryption/decryption roundtrip preserves data."""
         key = base64.urlsafe_b64encode(os.urandom(32)).decode()
         encryption = TokenEncryption(key)
-        
+
         test_data = [
             "simple_token",
             "token with spaces",
@@ -54,7 +55,7 @@ class TestTokenEncryption:
             "special: !@#$%^&*()",
             "long" * 1000,  # Long token
         ]
-        
+
         for data in test_data:
             encrypted = encryption.encrypt(data)
             decrypted = encryption.decrypt(encrypted)
@@ -64,37 +65,37 @@ class TestTokenEncryption:
         """Test that wrong key cannot decrypt data."""
         key1 = base64.urlsafe_b64encode(os.urandom(32)).decode()
         key2 = base64.urlsafe_b64encode(os.urandom(32)).decode()
-        
+
         encryption1 = TokenEncryption(key1)
         encryption2 = TokenEncryption(key2)
-        
+
         encrypted = encryption1.encrypt("secret_data")
-        
+
         # Wrong key should fail
-        with pytest.raises(Exception):  # Fernet raises InvalidToken
+        with pytest.raises(InvalidToken):
             encryption2.decrypt(encrypted)
 
     def test_tampered_ciphertext_fails(self):
         """Test that tampered ciphertext is detected."""
         key = base64.urlsafe_b64encode(os.urandom(32)).decode()
         encryption = TokenEncryption(key)
-        
+
         encrypted = encryption.encrypt("original_data")
-        
+
         # Tamper with the ciphertext
         tampered = encrypted[:-5] + "XXXXX"
-        
-        with pytest.raises(Exception):
+
+        with pytest.raises(InvalidToken):
             encryption.decrypt(tampered)
 
     def test_empty_string_encryption(self):
         """Test that empty strings can be encrypted/decrypted."""
         key = base64.urlsafe_b64encode(os.urandom(32)).decode()
         encryption = TokenEncryption(key)
-        
+
         encrypted = encryption.encrypt("")
         decrypted = encryption.decrypt(encrypted)
-        
+
         assert decrypted == ""
 
 
@@ -121,12 +122,12 @@ class TestSQLInjectionPrevention:
             "'; DELETE FROM users WHERE '1'='1",
             "user\"; DROP TABLE users; --",
         ]
-        
+
         for malicious_id in malicious_ids:
             # Should safely store the malicious string as literal data
             user = await storage.get_or_create_user(malicious_id)
             assert user.external_user_id == malicious_id
-            
+
             # Verify database still works
             retrieved = await storage.get_user_by_id(user.id)
             assert retrieved is not None
@@ -135,13 +136,13 @@ class TestSQLInjectionPrevention:
     async def test_sql_injection_in_email(self, storage):
         """Test that SQL injection in email is prevented."""
         user = await storage.get_or_create_user("safe_user")
-        
+
         malicious_emails = [
             "test'; DROP TABLE connections; --@gmail.com",
             "user@gmail.com' OR '1'='1",
             "'; UPDATE connections SET is_active=0; --@test.com",
         ]
-        
+
         for malicious_email in malicious_emails:
             # Should safely store the malicious string
             connection = await storage.create_connection(
@@ -152,7 +153,7 @@ class TestSQLInjectionPrevention:
                 token_expires_at=datetime.utcnow() + timedelta(hours=1),
                 scopes=["gmail.readonly"],
             )
-            
+
             # Verify it was stored correctly
             retrieved = await storage.get_connection(connection.id)
             assert retrieved.gmail_address == malicious_email
@@ -161,15 +162,15 @@ class TestSQLInjectionPrevention:
     async def test_sql_injection_in_state(self, storage):
         """Test that SQL injection in OAuth state is prevented."""
         user = await storage.get_or_create_user("state_user")
-        
+
         malicious_states = [
             "state'; DROP TABLE oauth_states; --",
             "state' OR '1'='1",
             "'; DELETE FROM oauth_states; --",
         ]
-        
+
         for malicious_state in malicious_states:
-            state = await storage.create_oauth_state(
+            await storage.create_oauth_state(
                 user_id=user.id,
                 state=malicious_state,
                 scopes=["gmail.readonly"],
@@ -177,7 +178,7 @@ class TestSQLInjectionPrevention:
                 code_verifier="verifier",
                 expires_at=datetime.utcnow() + timedelta(minutes=10),
             )
-            
+
             # Verify it was stored correctly
             retrieved = await storage.get_oauth_state(malicious_state)
             assert retrieved.state == malicious_state
@@ -205,11 +206,11 @@ class TestXSSPrevention:
             "'\"><script>alert('xss')</script>",
             "<svg onload=alert('xss')>",
         ]
-        
+
         for payload in xss_payloads:
             # Data should be stored as-is (not executed)
             user = await storage.get_or_create_user(payload)
-            
+
             # Retrieved data should match exactly
             retrieved = await storage.get_user_by_id(user.id)
             assert retrieved.external_user_id == payload
@@ -231,14 +232,14 @@ class TestScopesListSecurity:
     async def test_malicious_scopes_handled_safely(self, storage):
         """Test that malicious data in scopes list is handled safely."""
         user = await storage.get_or_create_user("scope_user")
-        
+
         malicious_scopes = [
             "gmail.readonly",
             "'; DROP TABLE connections; --",
             "<script>alert('xss')</script>",
             "scope\nwith\nnewlines",
         ]
-        
+
         connection = await storage.create_connection(
             user_id=user.id,
             gmail_address="scopes@gmail.com",
@@ -247,9 +248,9 @@ class TestScopesListSecurity:
             token_expires_at=datetime.utcnow() + timedelta(hours=1),
             scopes=malicious_scopes,
         )
-        
+
         retrieved = await storage.get_connection(connection.id)
-        
+
         # All scopes should be stored and retrieved exactly
         assert set(retrieved.scopes) == set(malicious_scopes)
 
@@ -270,7 +271,7 @@ class TestConnectionIDSecurity:
     async def test_connection_id_randomness(self, storage):
         """Test that connection IDs appear random and unpredictable."""
         user = await storage.get_or_create_user("id_user")
-        
+
         ids = []
         for i in range(10):
             conn = await storage.create_connection(
@@ -282,10 +283,10 @@ class TestConnectionIDSecurity:
                 scopes=["gmail.readonly"],
             )
             ids.append(conn.id)
-        
+
         # All IDs should be unique
         assert len(ids) == len(set(ids))
-        
+
         # IDs shouldn't be sequential integers
         # (Check that they don't follow simple patterns)
         for i in range(len(ids) - 1):

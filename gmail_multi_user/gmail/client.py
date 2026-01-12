@@ -12,7 +12,6 @@ import httpx
 
 from gmail_multi_user.exceptions import GmailAPIError, RateLimitError
 
-
 # Gmail API base URL
 GMAIL_API_BASE = "https://gmail.googleapis.com/gmail/v1"
 

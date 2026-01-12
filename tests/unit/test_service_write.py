@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -12,9 +11,7 @@ from gmail_multi_user.service import GmailService
 from gmail_multi_user.tokens import ValidToken
 from gmail_multi_user.types import (
     AttachmentInput,
-    Contact,
     DraftResult,
-    Message,
     SendResult,
 )
 
@@ -360,7 +357,7 @@ class TestLabelOperations:
             }
         )
 
-        result = await service.archive(
+        await service.archive(
             connection_id="conn123",
             message_id="msg123",
         )

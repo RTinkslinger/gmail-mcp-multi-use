@@ -188,7 +188,7 @@ class TestMockGmailAPIClient:
         result = await mock_gmail.list_labels(token="fake")
 
         assert "labels" in result
-        label_ids = [l["id"] for l in result["labels"]]
+        label_ids = [label["id"] for label in result["labels"]]
         assert "INBOX" in label_ids
         assert "SENT" in label_ids
 

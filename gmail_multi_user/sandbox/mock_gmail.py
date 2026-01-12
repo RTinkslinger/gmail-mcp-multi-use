@@ -13,7 +13,6 @@ from typing import Any, Literal
 
 from gmail_multi_user.sandbox.mode import get_sandbox_config
 
-
 # Sample data for generating realistic mock messages
 SAMPLE_SENDERS = [
     ("Alice Johnson", "alice@example.com"),
@@ -95,7 +94,7 @@ class MockGmailAPIClient:
         thread_count = config.thread_count
         messages_per_thread = config.message_count // thread_count
 
-        for i in range(thread_count):
+        for _i in range(thread_count):
             thread_id = f"thread_{secrets.token_hex(8)}"
             thread_messages = []
 

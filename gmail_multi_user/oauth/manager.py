@@ -11,11 +11,10 @@ from typing import TYPE_CHECKING
 from gmail_multi_user.exceptions import AuthError
 from gmail_multi_user.logging import LogContext, get_logger
 from gmail_multi_user.oauth.google import GoogleOAuthClient
-
-logger = get_logger(__name__)
-from gmail_multi_user.oauth.pkce import PKCE
 from gmail_multi_user.oauth.state import OAuthStateManager
 from gmail_multi_user.types import AuthUrlResult, CallbackResult
+
+logger = get_logger(__name__)
 
 if TYPE_CHECKING:
     from gmail_multi_user.config import Config

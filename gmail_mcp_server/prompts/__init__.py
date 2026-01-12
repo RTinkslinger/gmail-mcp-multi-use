@@ -8,6 +8,6 @@ This package contains all MCP prompts:
 - build_agent: Scaffold email-capable AI agents
 """
 
-from gmail_mcp_server.prompts import setup, connect, diagnose, generate_ui, build_agent
+from gmail_mcp_server.prompts import build_agent, connect, diagnose, generate_ui, setup
 
 __all__ = ["setup", "connect", "diagnose", "generate_ui", "build_agent"]

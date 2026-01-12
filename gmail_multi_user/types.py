@@ -10,7 +10,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
 
-
 # =============================================================================
 # Core Entity Types (stored in database)
 # =============================================================================

@@ -11,8 +11,6 @@ Provides commands for:
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -47,7 +45,7 @@ def serve(
         "-p",
         help="Port to bind (for http transport)",
     ),
-    config: Optional[str] = typer.Option(
+    config: str | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -85,7 +83,7 @@ def serve(
 
     from gmail_mcp_server.server import mcp
 
-    console.print(f"[green]Starting Gmail MCP Server[/green]")
+    console.print("[green]Starting Gmail MCP Server[/green]")
     console.print(f"Transport: {transport}")
 
     if transport == "http":
@@ -164,7 +162,7 @@ app.add_typer(connections_app, name="connections")
 
 @connections_app.command("list")
 def connections_list(
-    user_id: Optional[str] = typer.Option(
+    user_id: str | None = typer.Option(
         None,
         "--user-id",
         "-u",
@@ -257,9 +255,9 @@ def connections_test(
         console.print(f"\n[bold]Connection: {connection_id}[/bold]\n")
 
         if result["valid"]:
-            console.print(f"[green]✓[/green] Valid")
+            console.print("[green]✓[/green] Valid")
         else:
-            console.print(f"[red]✗[/red] Invalid")
+            console.print("[red]✗[/red] Invalid")
 
         console.print(f"Gmail: {result['gmail_address']}")
         console.print(f"Scopes: {', '.join(result['scopes'])}")
@@ -308,7 +306,7 @@ def init(
         console.print(f"[green]✓[/green] Config created: {result['config_path']}")
 
         if result.get("encryption_key"):
-            console.print(f"\n[yellow]Encryption key generated[/yellow]")
+            console.print("\n[yellow]Encryption key generated[/yellow]")
             console.print("(Already saved in config file)")
 
         console.print("\n[bold]Next steps:[/bold]")
