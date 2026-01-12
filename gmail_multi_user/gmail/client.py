@@ -122,7 +122,8 @@ class GmailAPIClient:
         if response.status_code == 204:
             return {}
 
-        return response.json()
+        result: dict[str, Any] = response.json()
+        return result
 
     def _handle_error(self, response: httpx.Response) -> None:
         """Handle error responses from Gmail API.

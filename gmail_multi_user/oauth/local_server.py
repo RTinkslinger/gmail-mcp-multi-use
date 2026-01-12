@@ -109,7 +109,7 @@ class LocalOAuthServer:
         try:
             import uvicorn
 
-            app = self._create_app()
+            app = self._create_app()  # type: ignore[no-untyped-call]
 
             # Create server config
             config = uvicorn.Config(
@@ -178,13 +178,13 @@ class LocalOAuthServer:
                 error=str(e),
             )
 
-    def _create_app(self):
+    def _create_app(self):  # type: ignore[no-untyped-def]
         """Create the Starlette application for handling callbacks."""
         from starlette.applications import Starlette
         from starlette.responses import HTMLResponse
         from starlette.routing import Route
 
-        async def handle_callback(request):
+        async def handle_callback(request):  # type: ignore[no-untyped-def]
             """Handle the OAuth callback."""
             code = request.query_params.get("code")
             state = request.query_params.get("state")

@@ -73,24 +73,27 @@ class MessageComposer:
         """
         # Determine message structure
         has_html = body_html is not None
-        has_attachments = attachments and len(attachments) > 0
+        has_attachments = attachments is not None and len(attachments) > 0
 
-        if has_attachments:
+        # Build message - use MIMEBase as common type for msg
+        msg: MIMEBase
+        if has_attachments and attachments is not None:
             # multipart/mixed with text (or alternative) + attachments
-            msg = MIMEMultipart("mixed")
-            if has_html:
+            mixed_msg = MIMEMultipart("mixed")
+            if has_html and body_html is not None:
                 # Text part is multipart/alternative
-                text_part = self._create_alternative_part(body, body_html)
+                text_part: MIMEBase = self._create_alternative_part(body, body_html)
             else:
                 text_part = self._create_text_part(body)
-            msg.attach(text_part)
+            mixed_msg.attach(text_part)
 
             # Add attachments
             for attachment in attachments:
                 att_part = self._create_attachment_part(attachment)
-                msg.attach(att_part)
+                mixed_msg.attach(att_part)
+            msg = mixed_msg
 
-        elif has_html:
+        elif has_html and body_html is not None:
             # multipart/alternative with plain + HTML
             msg = self._create_alternative_part(body, body_html)
 

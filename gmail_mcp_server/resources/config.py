@@ -22,10 +22,10 @@ async def get_config_status() -> str:
     - encryption: {key_set}
     - server: {running, transport}
     """
-    from gmail_mcp_server.tools.setup import gmail_check_setup
+    from gmail_mcp_server.tools.setup import check_setup_impl
 
-    # Reuse the check_setup tool logic
-    status = await gmail_check_setup()
+    # Reuse the check_setup impl logic directly
+    status = await check_setup_impl()
 
     result = {
         "configured": status["ready"],

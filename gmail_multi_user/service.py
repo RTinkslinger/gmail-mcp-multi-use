@@ -6,7 +6,7 @@ token management, Gmail API calls, and connection updates.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from gmail_multi_user.gmail.client import GmailAPIClient
 from gmail_multi_user.gmail.composer import MessageComposer
@@ -400,7 +400,7 @@ class GmailService:
     async def get_profile(
         self,
         connection_id: str,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Get Gmail profile information.
 
         Args:

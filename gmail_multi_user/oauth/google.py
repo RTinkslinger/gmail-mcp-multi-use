@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlencode
 
 import httpx
@@ -309,7 +309,7 @@ class GoogleOAuthClient:
             return False
 
     @staticmethod
-    def _parse_token_response(data: dict) -> TokenResponse:
+    def _parse_token_response(data: dict[str, Any]) -> TokenResponse:
         """Parse token response from Google.
 
         Args:

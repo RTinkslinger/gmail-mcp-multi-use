@@ -151,7 +151,7 @@ state = ServerState()
 
 
 @asynccontextmanager
-async def lifespan(mcp_server: FastMCP):
+async def lifespan(mcp_server: FastMCP):  # type: ignore[no-untyped-def]
     """Manage server lifecycle."""
     try:
         await state.initialize()
@@ -194,7 +194,8 @@ def format_response(data: Any) -> dict[str, Any]:
                     for item in value
                 ]
         return result
-    return data
+    # For non-dataclass input, assume it's already a dict
+    return dict(data) if not isinstance(data, dict) else data
 
 
 def register_all() -> None:

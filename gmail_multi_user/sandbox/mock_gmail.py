@@ -83,9 +83,9 @@ class MockGmailAPIClient:
             http_client: HTTP client (ignored in mock).
         """
         self._sandbox_config = get_sandbox_config()
-        self._messages: dict[str, dict] = {}
+        self._messages: dict[str, dict[str, Any]] = {}
         self._threads: dict[str, list[str]] = {}
-        self._drafts: dict[str, dict] = {}
+        self._drafts: dict[str, dict[str, Any]] = {}
         self._generate_sample_data()
 
     def _generate_sample_data(self) -> None:

@@ -14,7 +14,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
@@ -173,7 +173,7 @@ class ConfigLoader:
         file_path = cls._find_config_file(config_path)
 
         # Load from file if found
-        file_config: dict = {}
+        file_config: dict[str, Any] = {}
         if file_path:
             file_config = cls._load_yaml_file(file_path)
 
@@ -230,7 +230,7 @@ class ConfigLoader:
         return None
 
     @classmethod
-    def _load_yaml_file(cls, path: Path) -> dict:
+    def _load_yaml_file(cls, path: Path) -> dict[str, Any]:
         """Load a YAML configuration file.
 
         Args:
@@ -333,7 +333,7 @@ class ValidationResult:
     issues: list[ValidationIssue]
     warnings: list[str]
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "valid": self.valid,

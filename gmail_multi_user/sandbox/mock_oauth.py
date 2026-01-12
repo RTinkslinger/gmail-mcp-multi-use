@@ -8,6 +8,7 @@ from __future__ import annotations
 import secrets
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Any
 
 from gmail_multi_user.sandbox.mode import get_sandbox_config
 
@@ -45,7 +46,7 @@ class MockGoogleOAuthClient:
         user = await client.get_user_info(tokens.access_token)
     """
 
-    def __init__(self, config: dict | None = None) -> None:
+    def __init__(self, config: dict[str, Any] | None = None) -> None:
         """Initialize mock OAuth client.
 
         Args:

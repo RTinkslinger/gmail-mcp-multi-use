@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from gmail_multi_user.exceptions import StorageError
 from gmail_multi_user.storage.base import StorageBackend
@@ -132,7 +132,7 @@ class SupabaseBackend(StorageBackend):
                 code="query_failed",
             )
 
-        return self._dict_to_user(result.data[0])
+        return self._dict_to_user(cast(dict[str, Any], result.data[0]))
 
     async def get_user_by_external_id(self, external_user_id: str) -> User | None:
         """Get a user by their external ID."""
@@ -192,7 +192,7 @@ class SupabaseBackend(StorageBackend):
         }
 
         try:
-            result = client.table("gmail_connections").insert(data).execute()
+            result = client.table("gmail_connections").insert(cast(Any, data)).execute()
         except Exception as e:
             # Check for unique constraint violation
             error_msg = str(e).lower()
@@ -214,7 +214,7 @@ class SupabaseBackend(StorageBackend):
                 code="query_failed",
             )
 
-        return self._dict_to_connection(result.data[0])
+        return self._dict_to_connection(cast(dict[str, Any], result.data[0]))
 
     async def get_connection(self, connection_id: str) -> Connection | None:
         """Get a connection by ID."""
@@ -369,7 +369,7 @@ class SupabaseBackend(StorageBackend):
                 code="query_failed",
             )
 
-        return self._dict_to_oauth_state(result.data[0])
+        return self._dict_to_oauth_state(cast(dict[str, Any], result.data[0]))
 
     async def get_oauth_state(self, state: str) -> OAuthState | None:
         """Get an OAuth state by state string."""
@@ -390,7 +390,7 @@ class SupabaseBackend(StorageBackend):
         # Get count before delete (Supabase doesn't return count on delete)
         count_result = (
             client.table("oauth_states")
-            .select("id", count="exact")
+            .select("id", count="exact")  # type: ignore[arg-type]
             .lt("expires_at", now)
             .execute()
         )

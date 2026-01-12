@@ -167,6 +167,7 @@ class SQLiteBackend(StorageBackend):
                     ) as cursor2:
                         row = await cursor2.fetchone()
 
+                assert row is not None  # row is guaranteed non-None after re-fetch
                 return self._row_to_user(row)
 
         # Create new user
@@ -312,7 +313,7 @@ class SQLiteBackend(StorageBackend):
         conn = await self._get_connection()
 
         query = "SELECT * FROM gmail_connections WHERE 1=1"
-        params: list = []
+        params: list[str] = []
 
         if user_id:
             query += " AND user_id = ?"

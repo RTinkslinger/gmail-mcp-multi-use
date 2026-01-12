@@ -229,7 +229,7 @@ class HumanFormatter(logging.Formatter):
         return result
 
 
-class StructuredLoggerAdapter(logging.LoggerAdapter):
+class StructuredLoggerAdapter(logging.LoggerAdapter):  # type: ignore[type-arg]
     """Logger adapter that supports keyword arguments for structured logging.
 
     Example:
@@ -242,7 +242,9 @@ class StructuredLoggerAdapter(logging.LoggerAdapter):
         """Initialize the adapter."""
         super().__init__(logger, extra or {})
 
-    def process(self, msg: str, kwargs: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    def process(  # type: ignore[override]
+        self, msg: str, kwargs: dict[str, Any]
+    ) -> tuple[str, dict[str, Any]]:
         """Process the logging call to add extra fields."""
         # Move non-standard kwargs to extra
         extra = kwargs.get("extra", {})
@@ -257,23 +259,33 @@ class StructuredLoggerAdapter(logging.LoggerAdapter):
         kwargs["extra"] = extra
         return msg, kwargs
 
-    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def debug(  # type: ignore[override]
+        self, msg: str, *args: Any, **kwargs: Any
+    ) -> None:
         """Log debug message with optional structured fields."""
         self.log(logging.DEBUG, msg, *args, **kwargs)
 
-    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def info(  # type: ignore[override]
+        self, msg: str, *args: Any, **kwargs: Any
+    ) -> None:
         """Log info message with optional structured fields."""
         self.log(logging.INFO, msg, *args, **kwargs)
 
-    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def warning(  # type: ignore[override]
+        self, msg: str, *args: Any, **kwargs: Any
+    ) -> None:
         """Log warning message with optional structured fields."""
         self.log(logging.WARNING, msg, *args, **kwargs)
 
-    def error(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def error(  # type: ignore[override]
+        self, msg: str, *args: Any, **kwargs: Any
+    ) -> None:
         """Log error message with optional structured fields."""
         self.log(logging.ERROR, msg, *args, **kwargs)
 
-    def critical(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def critical(  # type: ignore[override]
+        self, msg: str, *args: Any, **kwargs: Any
+    ) -> None:
         """Log critical message with optional structured fields."""
         self.log(logging.CRITICAL, msg, *args, **kwargs)
 
