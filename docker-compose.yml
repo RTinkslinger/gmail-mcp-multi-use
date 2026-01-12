@@ -1,0 +1,88 @@
+# Docker Compose for gmail-multi-user-mcp
+# Usage:
+#   Development: docker-compose up
+#   Production:  docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+version: "3.9"
+
+services:
+  gmail-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gmail-mcp
+    restart: unless-stopped
+    
+    # Volumes for persistent data
+    volumes:
+      - gmail_data:/app/data
+      - ./config:/app/config:ro
+    
+    # Environment variables
+    environment:
+      - GMAIL_MCP_STORAGE_TYPE=${GMAIL_MCP_STORAGE_TYPE:-sqlite}
+      - GMAIL_MCP_STORAGE_SQLITE_PATH=/app/data/gmail_mcp.db
+      - GMAIL_MCP_LOG_LEVEL=${GMAIL_MCP_LOG_LEVEL:-INFO}
+      - GMAIL_MCP_LOG_FORMAT=${GMAIL_MCP_LOG_FORMAT:-json}
+      # Encryption key should be provided via .env file or secrets
+      - GMAIL_MCP_ENCRYPTION_KEY=${GMAIL_MCP_ENCRYPTION_KEY}
+      # Google OAuth credentials
+      - GMAIL_MCP_GOOGLE_CLIENT_ID=${GMAIL_MCP_GOOGLE_CLIENT_ID}
+      - GMAIL_MCP_GOOGLE_CLIENT_SECRET=${GMAIL_MCP_GOOGLE_CLIENT_SECRET}
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "gmail-mcp", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    
+    # Resource limits (adjust based on needs)
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+  # HTTP transport variant (for REST API access)
+  gmail-mcp-http:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gmail-mcp-http
+    restart: unless-stopped
+    profiles:
+      - http  # Only starts with: docker-compose --profile http up
+    
+    ports:
+      - "8080:8080"
+    
+    volumes:
+      - gmail_data:/app/data
+      - ./config:/app/config:ro
+    
+    environment:
+      - GMAIL_MCP_STORAGE_TYPE=${GMAIL_MCP_STORAGE_TYPE:-sqlite}
+      - GMAIL_MCP_STORAGE_SQLITE_PATH=/app/data/gmail_mcp.db
+      - GMAIL_MCP_LOG_LEVEL=${GMAIL_MCP_LOG_LEVEL:-INFO}
+      - GMAIL_MCP_LOG_FORMAT=${GMAIL_MCP_LOG_FORMAT:-json}
+      - GMAIL_MCP_ENCRYPTION_KEY=${GMAIL_MCP_ENCRYPTION_KEY}
+      - GMAIL_MCP_GOOGLE_CLIENT_ID=${GMAIL_MCP_GOOGLE_CLIENT_ID}
+      - GMAIL_MCP_GOOGLE_CLIENT_SECRET=${GMAIL_MCP_GOOGLE_CLIENT_SECRET}
+    
+    command: ["serve", "--transport", "http", "--host", "0.0.0.0", "--port", "8080"]
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  gmail_data:
+    driver: local

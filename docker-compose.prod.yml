@@ -1,0 +1,52 @@
+# Production overrides for gmail-multi-user-mcp
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: "3.9"
+
+services:
+  gmail-mcp:
+    # Use production image from registry
+    image: ghcr.io/anthropics/gmail-multi-user-mcp:latest
+    
+    # Production environment
+    environment:
+      - GMAIL_MCP_LOG_LEVEL=WARNING
+      - GMAIL_MCP_LOG_FORMAT=json
+      # For Supabase production storage
+      - GMAIL_MCP_STORAGE_TYPE=${GMAIL_MCP_STORAGE_TYPE:-supabase}
+      - GMAIL_MCP_STORAGE_SUPABASE_URL=${GMAIL_MCP_STORAGE_SUPABASE_URL}
+      - GMAIL_MCP_STORAGE_SUPABASE_KEY=${GMAIL_MCP_STORAGE_SUPABASE_KEY}
+    
+    # Stricter resource limits for production
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  gmail-mcp-http:
+    image: ghcr.io/anthropics/gmail-multi-user-mcp:latest
+    
+    environment:
+      - GMAIL_MCP_LOG_LEVEL=WARNING
+      - GMAIL_MCP_LOG_FORMAT=json
+      - GMAIL_MCP_STORAGE_TYPE=${GMAIL_MCP_STORAGE_TYPE:-supabase}
+      - GMAIL_MCP_STORAGE_SUPABASE_URL=${GMAIL_MCP_STORAGE_SUPABASE_URL}
+      - GMAIL_MCP_STORAGE_SUPABASE_KEY=${GMAIL_MCP_STORAGE_SUPABASE_KEY}
+    
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M

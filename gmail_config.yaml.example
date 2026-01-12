@@ -1,0 +1,43 @@
+# Gmail Multi-User MCP Configuration
+# Copy this file to gmail_config.yaml and fill in your values
+
+# Encryption key for token storage (required)
+# Generate with: python -c "from gmail_multi_user.tokens import TokenEncryption; print(TokenEncryption.generate_key())"
+encryption_key: "YOUR_FERNET_KEY_HERE"
+
+# Google OAuth configuration (required)
+google:
+  # From Google Cloud Console > APIs & Services > Credentials
+  client_id: "YOUR_CLIENT_ID.apps.googleusercontent.com"
+  client_secret: "YOUR_CLIENT_SECRET"
+
+  # OAuth redirect URI - must match Google Cloud Console configuration
+  redirect_uri: "http://localhost:8000/oauth/callback"
+
+  # Default Gmail scopes to request
+  # Note: userinfo.email is required to fetch the authenticated user's email
+  scopes:
+    - "https://www.googleapis.com/auth/gmail.readonly"
+    - "https://www.googleapis.com/auth/gmail.send"
+    - "https://www.googleapis.com/auth/userinfo.email"
+
+# Storage backend configuration
+storage:
+  # "sqlite" for local development, "supabase" for production
+  type: "sqlite"
+
+  # SQLite configuration (when type is "sqlite")
+  sqlite:
+    path: "gmail_mcp.db"
+
+  # Supabase configuration (when type is "supabase")
+  # supabase:
+  #   url: "https://your-project.supabase.co"
+  #   key: "your-service-role-key"
+
+# Optional: OAuth state expiration (default: 600 seconds / 10 minutes)
+# oauth_state_ttl_seconds: 600
+
+# Optional: Token refresh buffer (default: 300 seconds / 5 minutes)
+# Tokens will be refreshed this many seconds before they expire
+# token_refresh_buffer_seconds: 300
