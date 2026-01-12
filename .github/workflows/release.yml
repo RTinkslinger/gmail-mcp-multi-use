@@ -64,6 +64,8 @@ jobs:
     needs: build-package
     runs-on: ubuntu-latest
     environment: pypi
+    permissions:
+      id-token: write  # Required for trusted publishing (OIDC)
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -73,8 +75,7 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        # Uses trusted publishing (OIDC) - no token needed
 
   build-docker:
     name: Build and Push Docker Image
@@ -133,7 +134,7 @@ jobs:
           # Extract notes for this version from CHANGELOG.md
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          
+
           # Get content between version headers
           sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | head -n -1 > release_notes.md
           echo "Release notes extracted"
